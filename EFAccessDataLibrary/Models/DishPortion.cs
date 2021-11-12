@@ -1,10 +1,10 @@
 ﻿namespace EFDataAccessLibrary.Models;
 
-public class Dishe
+public class DishPortion
 {
     public int Id { get; set; }
 
-    public string Name { get; set; }
+    public double Weight { get; set; }
 
     public int? Calories { get; set; }
 
@@ -14,10 +14,5 @@ public class Dishe
 
     public int? Carbs { get; set; }
 
-    public List<Ingredient> Ingredients { get; set; }
-
-    public Dishe()
-    {
-
-    }
+    public Dish Dish { get; set; }
 }

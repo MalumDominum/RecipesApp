@@ -1,6 +1,6 @@
 ﻿namespace EFDataAccessLibrary.Models;
 
-public class Ingredient
+public class Cuisine
 {
     public int Id { get; set; }
 
