@@ -9,6 +9,7 @@ public class RestaurantContext : DbContext
 {
     public RestaurantContext(DbContextOptions options) : base(options)
     {
+        // For re-create DB (Just run and comment again)
         Database.EnsureDeleted();
         Database.EnsureCreated();
     }
@@ -27,13 +28,7 @@ public class RestaurantContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .Build();
-
-        var connectionString = configuration.GetConnectionString("AppDatabase");
-        optionsBuilder.UseSqlServer(connectionString);
+        optionsBuilder.UseSqlServer("Server = DELLG3MALEKSEEV; Database = RestaurantDB; Trusted_Connection = True;");
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -129,15 +124,15 @@ public class RestaurantContext : DbContext
                   .IsRequired();
 
             entity.Property(e => e.RequestTime)
-              .HasColumnName("request_time")
-              .IsRequired();
+                  .HasColumnName("request_time")
+                  .HasDefaultValue(DateTime.Now);
 
             entity.Property(e => e.ServingTime)
-              .HasColumnName("serving_time");
+                  .HasColumnName("serving_time");
 
             entity.HasMany(o => o.Dishes)
-              .WithMany(d => d.Orders)
-              .UsingEntity(j => j.ToTable("order_dish"));
+                  .WithMany(d => d.Orders)
+                  .UsingEntity(j => j.ToTable("order_dish"));
         });
 
         modelBuilder.Entity<Cuisine>(entity =>

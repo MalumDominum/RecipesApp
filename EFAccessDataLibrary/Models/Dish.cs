@@ -16,5 +16,5 @@ public class Dish
 
     public List<DishPortion> DishPortions { get; set; }
 
-    public List<Order> Orders { get; set; }
+    public List<Order>? Orders { get; set; }
 }

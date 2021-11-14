@@ -6,5 +6,5 @@ public class Category
 
     public string Name { get; set; }
 
-    public List<Dish> Dishes { get; set; }
+    public List<Dish>? Dishes { get; set; }
 }

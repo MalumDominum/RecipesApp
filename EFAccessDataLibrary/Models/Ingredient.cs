@@ -8,5 +8,5 @@ public class Ingredient
 
     public string? Description { get; set; }
 
-    public List<Dish> Dishes { get; set; }
+    public List<Dish>? Dishes { get; set; }
 }

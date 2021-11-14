@@ -29,15 +29,13 @@ namespace WebApi.Controllers
         }
 
         // GET: api/Categories/5
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<ActionResult<Category>> GetCategory(int id)
         {
             var category = await _context.Categories.FindAsync(id);
 
             if (category == null)
-            {
                 return NotFound();
-            }
 
             return category;
         }
@@ -48,9 +46,7 @@ namespace WebApi.Controllers
         public async Task<IActionResult> PutCategory(int id, Category category)
         {
             if (id != category.Id)
-            {
                 return BadRequest();
-            }
 
             _context.Entry(category).State = EntityState.Modified;
 
@@ -60,14 +56,8 @@ namespace WebApi.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CategoryExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                if (!CategoryExists(id)) return NotFound();
+                else throw;
             }
 
             return NoContent();
@@ -90,9 +80,7 @@ namespace WebApi.Controllers
         {
             var category = await _context.Categories.FindAsync(id);
             if (category == null)
-            {
                 return NotFound();
-            }
 
             _context.Categories.Remove(category);
             await _context.SaveChangesAsync();

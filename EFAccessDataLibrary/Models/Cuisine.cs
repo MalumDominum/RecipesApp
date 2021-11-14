@@ -8,5 +8,5 @@ public class Cuisine
 
     public string? Description { get; set; }
 
-    public List<Dish> Dishes { get; set; }
+    public List<Dish>? Dishes { get; set; }
 }
