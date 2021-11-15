@@ -1,4 +1,3 @@
-//using Microsoft.EntityFrameworkCore;
 using EFDataAccessLibrary;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,9 +11,6 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new() { Title = "Restaurant", Version = "v1" });
 });
-// var connectionString = builder.Configuration.GetConnectionString("AppDatabase");
-// builder.Services.AddDbContext<RestaurantContext>(options => options.UseSqlServer(connectionString));
-builder.Services.AddDbContext<RestaurantContext>();
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.

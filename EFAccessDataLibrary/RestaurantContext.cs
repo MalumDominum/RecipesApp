@@ -11,7 +11,7 @@ public class RestaurantContext : DbContext
 
     public RestaurantContext(DbContextOptions options) : base(options)
     {
-        // For re-create DB (Just run and comment again)
+        // For re-create DB (Just run execute, turn off app and comment again)
         //Database.EnsureDeleted();
         //Database.EnsureCreated();
     }

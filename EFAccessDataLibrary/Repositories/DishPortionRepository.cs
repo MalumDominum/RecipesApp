@@ -11,31 +11,16 @@ public class DishPortionRepository : Repository<DishPortion>
 {
     private RestaurantContext db;
 
-    public DishPortionRepository(RestaurantContext context)
-    {
-        db = context;
-    }
+    public DishPortionRepository(RestaurantContext context) { db = context; }
 
-    public IEnumerable<DishPortion> GetAll()
-    {
-        return db.DishPortions;
-    }
-
-    public DishPortion Get(int id)
-    {
-        return db.DishPortions.Find(id);
-    }
-
-    public void Create(DishPortion dishPortion)
-    {
-        db.DishPortions.Add(dishPortion);
-    }
-
-    public void Update(DishPortion dishPortion)
-    {
-        db.Entry(dishPortion).State = EntityState.Modified;
-    }
-
+    public IEnumerable<DishPortion> GetAll() => db.DishPortions;
+    
+    public DishPortion Get(int id) => db.DishPortions.Find(id);
+    
+    public void Create(DishPortion dishPortion) => db.DishPortions.Add(dishPortion);
+    
+    public void Update(DishPortion dishPortion) => db.Entry(dishPortion).State = EntityState.Modified;
+    
     public void Delete(int id)
     {
         DishPortion? dishPortion = db.DishPortions.Find(id);

@@ -11,30 +11,15 @@ public class CategoryRepository : Repository<Category>
 {
     private RestaurantContext db;
 
-    public CategoryRepository(RestaurantContext context)
-    {
-        db = context;
-    }
+    public CategoryRepository(RestaurantContext context) { db = context; }
 
-    public IEnumerable<Category> GetAll()
-    {
-        return db.Categories;
-    }
+    public IEnumerable<Category> GetAll() => db.Categories;
 
-    public Category Get(int id)
-    {
-        return db.Categories.Find(id);
-    }
+    public Category Get(int id) => db.Categories.Find(id);
 
-    public void Create(Category category)
-    {
-        db.Categories.Add(category);
-    }
+    public void Create(Category category) => db.Categories.Add(category);
 
-    public void Update(Category category)
-    {
-        db.Entry(category).State = EntityState.Modified;
-    }
+    public void Update(Category category) => db.Entry(category).State = EntityState.Modified;
 
     public void Delete(int id)
     {

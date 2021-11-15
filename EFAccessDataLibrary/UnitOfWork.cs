@@ -10,7 +10,7 @@ namespace EFDataAccessLibrary
 {
     public class UnitOfWork : IDisposable
     {
-        private RestaurantContext db = new RestaurantContext();
+        private RestaurantContext db = new();
 
         private CategoryRepository categoryRepository;
         private CuisineRepository cuisineRepository;
@@ -79,10 +79,7 @@ namespace EFDataAccessLibrary
             }
         }
 
-        public void Save()
-        {
-            db.SaveChanges();
-        }
+        public void Save() => db.SaveChanges();
 
         private bool _disposed = false;
 
