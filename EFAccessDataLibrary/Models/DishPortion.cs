@@ -13,6 +13,4 @@ public class DishPortion
     public int? Fats { get; set; }
 
     public int? Carbs { get; set; }
-
-    public Dish Dish { get; set; }
 }

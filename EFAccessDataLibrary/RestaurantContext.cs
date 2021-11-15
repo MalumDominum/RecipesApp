@@ -7,11 +7,13 @@ namespace EFDataAccessLibrary;
 
 public class RestaurantContext : DbContext
 {
+    public RestaurantContext() : base() { }
+
     public RestaurantContext(DbContextOptions options) : base(options)
     {
         // For re-create DB (Just run and comment again)
-        Database.EnsureDeleted();
-        Database.EnsureCreated();
+        //Database.EnsureDeleted();
+        //Database.EnsureCreated();
     }
 
     public virtual DbSet<Ingredient> Ingredients { get; set; }
@@ -46,6 +48,8 @@ public class RestaurantContext : DbContext
                   .HasColumnName("name")
                   .HasMaxLength(50)
                   .IsRequired();
+            entity.HasIndex(e => e.Name)
+                  .IsUnique();
 
             entity.Property(e => e.Description)
                   .HasColumnName("description");
@@ -75,13 +79,13 @@ public class RestaurantContext : DbContext
                   .UsingEntity(j => j.ToTable("igredient_dish"));
 
             entity.HasOne(d => d.Category)
-                  .WithMany(c => c.Dishes);
+                  .WithMany();
 
             entity.HasOne(d => d.Cuisine)
-                  .WithMany(c => c.Dishes);
+                  .WithMany();
 
             entity.HasMany(d => d.DishPortions)
-                  .WithOne(dp => dp.Dish);
+                  .WithOne();
         });
 
         modelBuilder.Entity<DishPortion>(entity =>
@@ -106,9 +110,6 @@ public class RestaurantContext : DbContext
 
             entity.Property(e => e.Carbs)
                   .HasColumnName("carbs");
-
-            entity.HasOne(dp => dp.Dish)
-                  .WithMany(d => d.DishPortions);
         });
 
         modelBuilder.Entity<Order>(entity =>
@@ -146,12 +147,11 @@ public class RestaurantContext : DbContext
                   .HasColumnName("name")
                   .HasMaxLength(50)
                   .IsRequired();
+            entity.HasIndex(e => e.Name)
+                  .IsUnique();
 
             entity.Property(e => e.Description)
                   .HasColumnName("description");
-
-            entity.HasMany(c => c.Dishes)
-                  .WithOne(d => d.Cuisine);
         });
 
         modelBuilder.Entity<Category>(entity =>
@@ -165,9 +165,8 @@ public class RestaurantContext : DbContext
                   .HasColumnName("name")
                   .HasMaxLength(50)
                   .IsRequired();
-
-            entity.HasMany(c => c.Dishes)
-                  .WithOne(d => d.Category);
+            entity.HasIndex(e => e.Name)
+                  .IsUnique();
         });
     }
 

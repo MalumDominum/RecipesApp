@@ -12,9 +12,9 @@ public class Dish
 
     public Category Category { get; set; }
 
-    public List<Ingredient> Ingredients { get; set; }
+    public List<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
 
-    public List<DishPortion> DishPortions { get; set; }
+    public List<DishPortion> DishPortions { get; set; } = new List<DishPortion>();
 
-    public List<Order>? Orders { get; set; }
+    public List<Order> Orders { get; set; } = new List<Order>();
 }

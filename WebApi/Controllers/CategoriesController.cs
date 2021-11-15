@@ -45,8 +45,8 @@ namespace WebApi.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCategory(int id, Category category)
         {
-            if (id != category.Id)
-                return BadRequest();
+            if (_context.Categories.Any(c => c.Name == category.Name))
+                return BadRequest("Category with that name already existing");
 
             _context.Entry(category).State = EntityState.Modified;
 
@@ -68,6 +68,9 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Category>> PostCategory(Category category)
         {
+            if (_context.Categories.Any(c => c.Name == category.Name))
+                return BadRequest("Category with that name already existing");
+
             _context.Categories.Add(category);
             await _context.SaveChangesAsync();
 
