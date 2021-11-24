@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi", "WebApi\WebApi.csproj", "{DCB8BDB9-CDDF-4EB3-91D8-B2F8C6BECE0D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFDataAccessLibrary", "EFAccessDataLibrary\EFDataAccessLibrary.csproj", "{D352155F-3EF8-4443-B579-7C100287F3B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLayer", "EFAccessDataLibrary\DataAccessLayer.csproj", "{D352155F-3EF8-4443-B579-7C100287F3B4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

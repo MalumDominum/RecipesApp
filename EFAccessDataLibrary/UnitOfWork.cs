@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using EFDataAccessLibrary.Repositories;
-using EFDataAccessLibrary.Models;
+using DataAccessLayer.Models;
+using DataAccessLayer.Repositories;
 
-namespace EFDataAccessLibrary
+namespace DataAccessLayer
 {
     public class UnitOfWork : IDisposable
     {
-        private RestaurantContext db = new();
+        private readonly RestaurantContext db = new();
 
         private CategoryRepository categoryRepository;
         private CuisineRepository cuisineRepository;
@@ -79,7 +79,7 @@ namespace EFDataAccessLibrary
             }
         }
 
-        public void Save() => db.SaveChanges();
+        public async Task SaveAsync() => await db.SaveChangesAsync();
 
         private bool _disposed = false;
 
@@ -89,7 +89,7 @@ namespace EFDataAccessLibrary
             {
                 if (disposing)
                     db.Dispose();
-                
+
                 _disposed = true;
             }
         }

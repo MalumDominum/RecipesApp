@@ -1,9 +1,9 @@
-﻿using EFDataAccessLibrary.Models;
+﻿using DataAccessLayer.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using Microsoft.Extensions.Configuration;
 
-namespace EFDataAccessLibrary;
+namespace DataAccessLayer;
 
 public class RestaurantContext : DbContext
 {

@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using EFDataAccessLibrary;
-using EFDataAccessLibrary.Models;
+using DataAccessLayer.Models;
+using DataAccessLayer;
 
 namespace WebApi.Controllers
 {
@@ -20,13 +20,14 @@ namespace WebApi.Controllers
 
         // GET: api/Categories
         [HttpGet]
-        public ActionResult<IEnumerable<Category>> GetCategories() => Ok(_context.Categories.GetAll());
+        public async Task<ActionResult<IEnumerable<Category>>> GetCategories() => 
+            await _context.Categories.GetAllAsync();
 
         // GET: api/Categories/5
         [HttpGet("{id:int}")]
-        public ActionResult<Category> GetCategory(int id)
+        public async Task<ActionResult<Category>> GetCategory(int id)
         {
-            var category = _context.Categories.Get(id);
+            var category = await _context.Categories.GetByIdAsync(id);
 
             if (category == null)
                 return NotFound();
@@ -37,20 +38,25 @@ namespace WebApi.Controllers
         // PUT: api/Categories/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public IActionResult PutCategory(int id, Category category)
+        public async Task<IActionResult> PutCategoryAsync(int id, Category category)
         {
-            if (_context.Categories.GetAll().Any(c => c.Name == category.Name))
+            var allCategories = await _context.Categories.GetAllAsync();
+            if (allCategories.Any(c => c.Name == category.Name))
                 return BadRequest("Category with that name already existing");
 
-            _context.Categories.Update(category);
+            if (id != category.Id)
+                return BadRequest();
+
+            await _context.Categories.UpdateAsync(category);
 
             try
             {
-                _context.Save();
+                await _context.SaveAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CategoryExists(id)) return NotFound();
+                bool categoryExists = await CategoryExistsAsync(id);
+                if (!categoryExists) return NotFound();
                 else throw;
             }
 
@@ -60,31 +66,36 @@ namespace WebApi.Controllers
         // POST: api/Categories
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public ActionResult<Category> PostCategory(Category category)
+        public async Task<ActionResult<Category>> PostCategory(Category category)
         {
-            if (_context.Categories.GetAll().Any(c => c.Name == category.Name))
+            var allCategories = await _context.Categories.GetAllAsync();
+            if (allCategories.Any(c => c.Name == category.Name))
                 return BadRequest("Category with that name already existing");
 
-            _context.Categories.Create(category);
-            _context.Save();
+            await _context.Categories.AddAsync(category);
+            await _context.SaveAsync();
 
             return CreatedAtAction(nameof(GetCategory), new { id = category.Id }, category);
         }
 
         // DELETE: api/Categories/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteCategory(int id)
+        public async Task<IActionResult> DeleteCategory(int id)
         {
-            var category = _context.Categories.Get(id);
+            var category = await _context.Categories.GetByIdAsync(id);
             if (category == null)
                 return NotFound();
 
-            _context.Categories.Delete(category.Id);
-            _context.Save();
+            await _context.Categories.DeleteAsync(category);
+            await _context.SaveAsync();
 
             return NoContent();
         }
 
-        private bool CategoryExists(int id) => _context.Categories.GetAll().Any(e => e.Id == id);
+        private async Task<bool> CategoryExistsAsync(int id)
+        {
+            var categories = await _context.Categories.GetAllAsync();
+            return categories.Any(e => e.Id == id);
+        }
     }
 }
