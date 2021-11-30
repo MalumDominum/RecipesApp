@@ -6,5 +6,7 @@ public class Category
 
     public string Name { get; set; }
 
-    public List<Dish> Dishes { get; set; } = new();
+    public List<Dish> Dishes { get; set; }
+
+    public Category() => Dishes = new();
 }

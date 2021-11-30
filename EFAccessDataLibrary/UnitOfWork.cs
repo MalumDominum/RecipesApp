@@ -10,13 +10,16 @@ namespace DataAccessLayer
 {
     public class UnitOfWork : IDisposable
     {
-        private readonly RestaurantContext db = new();
+        private readonly RestaurantContext db;
+        public UnitOfWork() => db = new();
 
         private CategoryRepository categoryRepository;
         private CuisineRepository cuisineRepository;
         private DishPortionRepository dishPortionRepository;
         private DishRepository dishRepository;
+        private IngredientDishRepository ingredientDishRepository;
         private IngredientRepository ingredientRepository;
+        private OrderDishRepository orderDishRepository;
         private OrderRepository orderRepository;
 
         public CategoryRepository Categories
@@ -59,6 +62,16 @@ namespace DataAccessLayer
             }
         }
 
+        public IngredientDishRepository IngredientDish
+        {
+            get
+            {
+                if (ingredientDishRepository == null)
+                    ingredientDishRepository = new IngredientDishRepository(db);
+                return ingredientDishRepository;
+            }
+        }
+
         public IngredientRepository Ingredients
         {
             get
@@ -66,6 +79,16 @@ namespace DataAccessLayer
                 if (ingredientRepository == null)
                     ingredientRepository = new IngredientRepository(db);
                 return ingredientRepository;
+            }
+        }
+
+        public OrderDishRepository OrderDish
+        {
+            get
+            {
+                if (orderDishRepository == null)
+                    orderDishRepository = new OrderDishRepository(db);
+                return orderDishRepository;
             }
         }
 

@@ -8,5 +8,7 @@ public class Ingredient
 
     public string? Description { get; set; }
 
-    public List<IngredientDish> IngredientDishPairs { get; set; } = new();
+    public List<IngredientDish> IngredientDishPairs { get; set; }
+
+    public Ingredient() => IngredientDishPairs = new();
 }

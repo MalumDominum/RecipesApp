@@ -8,5 +8,7 @@ public class Cuisine
 
     public string? Description { get; set; }
 
-    public List<Dish> Dishes { get; set; } = new();
+    public List<Dish> Dishes { get; set; }
+
+    public Cuisine() => Dishes = new();
 }

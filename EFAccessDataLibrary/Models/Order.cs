@@ -10,5 +10,7 @@ public class Order
 
     public DateTime? ServingTime { get; set; }
 
-    public List<OrderDish> OrderDishPairs { get; set; } = new();
+    public List<OrderDish> OrderDishPairs { get; set; }
+
+    public Order() => OrderDishPairs = new();
 }

@@ -14,9 +14,16 @@ public class Dish
     public int CategoryId { get; set; }
     public Category Category { get; set; }
 
-    public List<DishPortion> DishPortions { get; set; } = new();
+    public List<DishPortion> DishPortions { get; set; }
 
-    public List<IngredientDish> IngredientDishPairs { get; set; } = new();
+    public List<IngredientDish> IngredientDishPairs { get; set; }
 
-    public List<OrderDish> OrderDishPairs { get; set; } = new();
+    public List<OrderDish> OrderDishPairs { get; set; }
+
+    public Dish()
+    {
+        DishPortions = new();
+        IngredientDishPairs = new();
+        OrderDishPairs = new();
+    }
 }
