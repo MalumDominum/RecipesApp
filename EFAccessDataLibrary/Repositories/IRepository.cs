@@ -14,7 +14,7 @@ namespace DataAccessLayer
 
         Task<TEntity> DeleteAsync(TEntity entity);
 
-        Task<TEntity> GetByIdAsync(TKey id);
+        Task<TEntity?> GetByIdAsync(TKey id);
 
         Task<int> GetCountAsync();
 

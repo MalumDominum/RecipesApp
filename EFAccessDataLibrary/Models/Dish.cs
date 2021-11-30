@@ -8,13 +8,15 @@ public class Dish
 
     public string? Description { get; set; }
 
+    public int CuisineId { get; set; }
     public Cuisine Cuisine { get; set; }
 
+    public int CategoryId { get; set; }
     public Category Category { get; set; }
 
-    public List<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
+    public List<DishPortion> DishPortions { get; set; } = new();
 
-    public List<DishPortion> DishPortions { get; set; } = new List<DishPortion>();
+    public List<IngredientDish> IngredientDishPairs { get; set; } = new();
 
-    public List<Order> Orders { get; set; } = new List<Order>();
+    public List<OrderDish> OrderDishPairs { get; set; } = new();
 }

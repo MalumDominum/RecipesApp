@@ -22,29 +22,42 @@ namespace DataAccessLayer
             return item.Entity;
         }
 
-        public virtual async Task UpdateAsync(TEntity entity) =>
+        public virtual async Task UpdateAsync(TEntity entity)
+        {
             Context.Entry(entity).State = EntityState.Modified;
+            await Task.FromResult(0);
+        }
 
-        public virtual async Task<TEntity> DeleteAsync(TEntity entity) =>
-            Context.Set<TEntity>()
-                   .Remove(entity).Entity;
+        public virtual async Task<TEntity> DeleteAsync(TEntity entity)
+        {
+            return Context.Set<TEntity>()
+                          .Remove(entity).Entity;
+        }
 
-        public virtual async Task<List<TEntity>> GetAllAsync() =>
-            await Context.Set<TEntity>()
-                         .ToListAsync();
+        public virtual async Task<List<TEntity>> GetAllAsync()
+        {
+            return await Context.Set<TEntity>()
+                                .ToListAsync();
+        }
 
-        public virtual async Task<TEntity> GetByIdAsync(TKey id) => 
-            await Context.Set<TEntity>()
-                         .FindAsync(id);
+        public virtual async Task<TEntity?> GetByIdAsync(TKey id)
+        {
+            return await Context.Set<TEntity>()
+                                .FindAsync(id);
+        }
 
-        public virtual async Task<int> GetCountAsync() => 
-            await Context.Set<TEntity>()
-                         .CountAsync();
+        public virtual async Task<int> GetCountAsync()
+        {
+            return await Context.Set<TEntity>()
+                                .CountAsync();
+        }
 
-        public virtual async Task<List<TEntity>> PagingFetchAsync(int startIndex, int count) =>
-            await Context.Set<TEntity>()
-                         .Take(startIndex..count)
-                         .ToListAsync();
+        public virtual async Task<List<TEntity>> PagingFetchAsync(int startIndex, int count)
+        {
+            return await Context.Set<TEntity>()
+                                .Take(startIndex..count)
+                                .ToListAsync();
+        }
 
         public Task SaveAsync() => Context.SaveChangesAsync();
     }

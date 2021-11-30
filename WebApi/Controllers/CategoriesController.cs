@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using DataAccessLayer.Models;
-using DataAccessLayer;
+using BusinessLogicLayer.Interfaces;
+using BusinessLogicLayer.Services;
 
 namespace WebApi.Controllers
 {
@@ -14,14 +14,11 @@ namespace WebApi.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly UnitOfWork _context;
-
-        public CategoriesController() { _context = new UnitOfWork(); }
-
-        // GET: api/Categories
+        /*// GET: api/Categories
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Category>>> GetCategories() => 
+        public async Task<ActionResult<IEnumerable<Category>>> GetCategories() =>
             await _context.Categories.GetAllAsync();
+
 
         // GET: api/Categories/5
         [HttpGet("{id:int}")]
@@ -96,6 +93,6 @@ namespace WebApi.Controllers
         {
             var categories = await _context.Categories.GetAllAsync();
             return categories.Any(e => e.Id == id);
-        }
+        }*/
     }
 }

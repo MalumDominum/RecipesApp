@@ -28,6 +28,10 @@ public class RestaurantContext : DbContext
 
     public virtual DbSet<Cuisine> Cuisines { get; set; }
 
+    public virtual DbSet<IngredientDish> IngredientDish { get; set; }
+
+    public virtual DbSet<OrderDish> OrderDish { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlServer("Server = DELLG3MALEKSEEV; Database = RestaurantDB; Trusted_Connection = True;");
@@ -47,16 +51,32 @@ public class RestaurantContext : DbContext
             entity.Property(e => e.Name)
                   .HasColumnName("name")
                   .HasMaxLength(50)
+                  .IsUnicode(true)
                   .IsRequired();
             entity.HasIndex(e => e.Name)
                   .IsUnique();
 
             entity.Property(e => e.Description)
-                  .HasColumnName("description");
+                  .HasColumnName("description")
+                  .IsUnicode(true);
 
-            entity.HasMany(p => p.Dishes)
-                  .WithMany(p => p.Ingredients)
-                  .UsingEntity(j => j.ToTable("igredient_dish"));
+            entity.HasMany(p => p.IngredientDishPairs)
+                  .WithOne(p => p.Ingredient);
+        });
+
+        modelBuilder.Entity<IngredientDish>(entity =>
+        {
+            entity.ToTable("ingredient_dish");
+
+            entity.HasOne(id => id.Dish)
+                  .WithMany(d => d.IngredientDishPairs)
+                  .HasForeignKey(id => id.DishId);
+
+            entity.HasOne(id => id.Ingredient)
+                  .WithMany(i => i.IngredientDishPairs)
+                  .HasForeignKey(id => id.IngredientId);
+
+            entity.HasKey(id => new { id.DishId, id.IngredientId });
         });
 
         modelBuilder.Entity<Dish>(entity =>
@@ -69,23 +89,68 @@ public class RestaurantContext : DbContext
             entity.Property(e => e.Name)
                   .HasColumnName("name")
                   .HasMaxLength(100)
+                  .IsUnicode(true)
                   .IsRequired();
 
             entity.Property(e => e.Description)
-                  .HasColumnName("description");
+                  .HasColumnName("description")
+                  .IsUnicode(true);
 
-            entity.HasMany(d => d.Ingredients)
-                  .WithMany(i => i.Dishes)
-                  .UsingEntity(j => j.ToTable("igredient_dish"));
+            entity.HasMany(d => d.IngredientDishPairs)
+                  .WithOne(id => id.Dish);
+
+            entity.HasMany(d => d.OrderDishPairs)
+                  .WithOne(od => od.Dish);
 
             entity.HasOne(d => d.Category)
-                  .WithMany();
+                  .WithMany(c => c.Dishes)
+                  .HasForeignKey(d => d.CategoryId);
 
             entity.HasOne(d => d.Cuisine)
-                  .WithMany();
+                  .WithMany(c => c.Dishes)
+                  .HasForeignKey(d => d.CuisineId);
 
             entity.HasMany(d => d.DishPortions)
-                  .WithOne();
+                  .WithOne(dp => dp.Dish);
+        });
+
+        modelBuilder.Entity<OrderDish>(entity =>
+        {
+            entity.ToTable("order_dish");
+
+            entity.HasOne(od => od.Order)
+                  .WithMany(o => o.OrderDishPairs)
+                  .HasForeignKey(od => od.OrderId);
+
+            entity.HasOne(od => od.Dish)
+                  .WithMany(d => d.OrderDishPairs)
+                  .HasForeignKey(od => od.DishId);
+
+            entity.HasKey(id => new { id.DishId, id.OrderId });
+        });
+
+        modelBuilder.Entity<Order>(entity =>
+        {
+            entity.ToTable("orders");
+
+            entity.Property(e => e.Id)
+                  .HasColumnName("order_id");
+
+            entity.Property(e => e.CustomerName)
+                  .HasColumnName("customer_name")
+                  .HasMaxLength(150)
+                  .IsUnicode(true)
+                  .IsRequired();
+
+            entity.Property(e => e.RequestTime)
+                  .HasColumnName("request_time")
+                  .HasDefaultValue(DateTime.Now);
+
+            entity.Property(e => e.ServingTime)
+                  .HasColumnName("serving_time");
+
+            entity.HasMany(o => o.OrderDishPairs)
+                  .WithOne(d => d.Order);
         });
 
         modelBuilder.Entity<DishPortion>(entity =>
@@ -94,6 +159,10 @@ public class RestaurantContext : DbContext
 
             entity.Property(e => e.Id)
                   .HasColumnName("dish_portion_id");
+
+            entity.Property(e => e.Cost)
+                  .HasColumnName("cost")
+                  .IsRequired();
 
             entity.Property(e => e.Weight)
                   .HasColumnName("weight")
@@ -110,30 +179,10 @@ public class RestaurantContext : DbContext
 
             entity.Property(e => e.Carbs)
                   .HasColumnName("carbs");
-        });
 
-        modelBuilder.Entity<Order>(entity =>
-        {
-            entity.ToTable("orders");
-
-            entity.Property(e => e.Id)
-                  .HasColumnName("order_id");
-
-            entity.Property(e => e.CustomerName)
-                  .HasColumnName("customer_name")
-                  .HasMaxLength(150)
-                  .IsRequired();
-
-            entity.Property(e => e.RequestTime)
-                  .HasColumnName("request_time")
-                  .HasDefaultValue(DateTime.Now);
-
-            entity.Property(e => e.ServingTime)
-                  .HasColumnName("serving_time");
-
-            entity.HasMany(o => o.Dishes)
-                  .WithMany(d => d.Orders)
-                  .UsingEntity(j => j.ToTable("order_dish"));
+            entity.HasOne(dp => dp.Dish)
+                  .WithMany(d => d.DishPortions)
+                  .HasForeignKey(dp => dp.DishId);
         });
 
         modelBuilder.Entity<Cuisine>(entity =>
@@ -146,12 +195,17 @@ public class RestaurantContext : DbContext
             entity.Property(e => e.Name)
                   .HasColumnName("name")
                   .HasMaxLength(50)
+                  .IsUnicode(true)
                   .IsRequired();
             entity.HasIndex(e => e.Name)
                   .IsUnique();
 
             entity.Property(e => e.Description)
-                  .HasColumnName("description");
+                  .HasColumnName("description")
+                  .IsUnicode(true);
+
+            entity.HasMany(c => c.Dishes)
+                  .WithOne(d => d.Cuisine);
         });
 
         modelBuilder.Entity<Category>(entity =>
@@ -164,14 +218,15 @@ public class RestaurantContext : DbContext
             entity.Property(e => e.Name)
                   .HasColumnName("name")
                   .HasMaxLength(50)
+                  .IsUnicode(true)
                   .IsRequired();
             entity.HasIndex(e => e.Name)
                   .IsUnique();
+
+            entity.HasMany(c => c.Dishes)
+                  .WithOne(d => d.Category);
         });
     }
 
-    void OnModelCreatingPartial(ModelBuilder modelBuilder)
-    {
-
-    }
+    private static void OnModelCreatingPartial(ModelBuilder modelBuilder) { }
 }

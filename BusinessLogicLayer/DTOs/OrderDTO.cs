@@ -1,6 +1,6 @@
-﻿namespace DataAccessLayer.Models;
+﻿namespace BusinessLogicLayer.DTOs;
 
-public class Order
+public class OrderDTO
 {
     public int Id { get; set; }
 
@@ -9,6 +9,4 @@ public class Order
     public DateTime RequestTime { get; set; }
 
     public DateTime? ServingTime { get; set; }
-
-    public List<OrderDish> OrderDishPairs { get; set; } = new();
 }

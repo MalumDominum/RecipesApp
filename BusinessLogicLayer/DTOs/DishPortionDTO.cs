@@ -1,6 +1,6 @@
-﻿namespace DataAccessLayer.Models;
+﻿namespace BusinessLogicLayer.DTOs;
 
-public class DishPortion
+public class DishPortionDTO
 {
     public int Id { get; set; }
 
@@ -17,5 +17,4 @@ public class DishPortion
     public double? Carbs { get; set; }
 
     public int DishId { get; set; }
-    public Dish Dish { get; set; }
 }

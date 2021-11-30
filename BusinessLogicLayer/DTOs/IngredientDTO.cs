@@ -1,12 +1,10 @@
-﻿namespace DataAccessLayer.Models;
+﻿namespace BusinessLogicLayer.DTOs;
 
-public class Cuisine
+public class IngredientDTO
 {
     public int Id { get; set; }
 
     public string Name { get; set; }
 
     public string? Description { get; set; }
-
-    public List<Dish> Dishes { get; set; } = new();
 }
