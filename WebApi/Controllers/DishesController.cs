@@ -21,66 +21,71 @@ namespace WebApi.Controllers
 
         // GET: api/Dishes
         [HttpGet]
-        public async Task<ActionResult<List<DishDTO>>> GetDishes() => await _service.GetDishes();
+        public async Task<ActionResult<List<DishDTO>>> GetDishes() => await _service.GetDishesAsync();
 
         // GET: api/Dishes/5
         [HttpGet("{id:int}")]
         public async Task<ActionResult<DishDTO>> GetDish(int id)
         {
-            var dish = await _service.GetDish(id);
+            var dish = await _service.GetDishAsync(id);
 
             if (dish == null) return NotFound();
 
             return dish;
         }
 
+        // GET: api/Dishes/Categories/3
+        [HttpGet("Categories/{categoryId:int}")]
+        public async Task<ActionResult<List<DishDTO>>> GetDishesByCategoryId(int categoryId)
+        {
+            return await _service.GetDishesByCategoryIdAsync(categoryId);
+        }
+
+        // GET: api/Dishes/Cuisine/3
+        [HttpGet("Cuisines/{cuisineId:int}")]
+        public async Task<ActionResult<List<DishDTO>>> GetDishesByCuisineId(int cuisineId)
+        {
+            return await _service.GetDishesByCuisineIdAsync(cuisineId);
+        }
+
         // PUT: api/Dishes/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public async Task<IActionResult> PutDishAsync(int id, DishDTO dish)
         {
-            var allDishes = await _service.GetDishes();
-            if (allDishes.Any(c => c.Name == dish.Name && c.Id != id))
-                return BadRequest("Dish with that name already existing");
+            if (await _service.AnyDishesAsync(c => c.Name == dish.Name && c.Id != id))
+                return BadRequest("Another dish with that name already existing");
 
             if (id != dish.Id)
-                return BadRequest("Dish must have same id with id in header");
+                return BadRequest("Dish must have same in header and body");
 
-            await _service.PutDish(id, dish);
+            await _service.PutDishAsync(id, dish);
             return NoContent();
         }
 
         // POST: api/Dishes
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<DishDTO>> PostDish(DishDTO dish)
         {
-            var allDishes = await _service.GetDishes();
+            var allDishes = await _service.GetDishesAsync();
             if (allDishes.Any(c => c.Name == dish.Name))
                 return BadRequest("Dish with that name already existing");
             // Make same with categoryId and cuisineId
 
-            await _service.PostDish(dish);
+            await _service.PostDishAsync(dish);
 
             return CreatedAtAction(nameof(GetDish), new { id = dish.Id }, dish);
         }
 
         // DELETE: api/Dishes/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteDish(int id)
         {
-            var dishExists = await DishExistsAsync(id);
-            if (!dishExists) return NotFound();
+            if (!await _service.AnyDishesAsync(d => d.Id == id))
+                return NotFound();
 
-            await _service.DeleteDish(id);
+            await _service.DeleteDishAsync(id);
 
             return NoContent();
-        }
-
-        private async Task<bool> DishExistsAsync(int id)
-        {
-            var categories = await _service.GetDishes();
-            return categories.Any(e => e.Id == id);
         }
     }
 }

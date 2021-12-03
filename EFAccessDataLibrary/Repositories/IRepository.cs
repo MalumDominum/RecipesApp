@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace DataAccessLayer
 {
-    internal interface IRepository<TKey, TEntity> where TEntity : class
+    internal interface IRepository<TKey, TEntity> : IDisposable where TEntity : class
     {
         Task<TEntity> AddAsync(TEntity entity);
 
@@ -18,7 +15,15 @@ namespace DataAccessLayer
 
         Task<int> GetCountAsync();
 
+        Task<int> GetCountAsync(Expression<Func<TEntity, bool>> predicate);
+
         Task<List<TEntity>> PagingFetchAsync(int startIndex, int count);
+
+        Task<List<TEntity>> GetWhereAsync(Expression<Func<TEntity, bool>> predicate);
+
+        Task<TEntity?> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
+
+        Task<bool> AnyExistingAsync(Expression<Func<TEntity, bool>> predicate);
 
         Task SaveAsync();
     }

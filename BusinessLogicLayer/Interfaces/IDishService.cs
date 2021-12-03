@@ -1,26 +1,25 @@
 ﻿using BusinessLogicLayer.DTOs;
 using DataAccessLayer.Models;
+using System.Linq.Expressions;
 
 namespace BusinessLogicLayer.Interfaces
 {
     public interface IDishService : IDisposable
     {
-        Task<DishDTO> GetDish(int id);
+        Task<DishDTO> GetDishAsync(int id);
 
-        Task<List<DishDTO>> GetDishes();
+        Task<List<DishDTO>> GetDishesAsync();
 
-        Task<List<DishDTO>> GetDishesByCuisine(int cuisineId);
+        Task<List<DishDTO>> GetDishesByCuisineIdAsync(int cuisineId);
 
-        Task<List<DishDTO>> GetDishesByCategory(int categoryId);
+        Task<List<DishDTO>> GetDishesByCategoryIdAsync(int categoryId);
 
-        Task PostDish(DishDTO dish);
+        Task<bool> AnyDishesAsync(Expression<Func<Dish, bool>> expression);
 
-        //Task PostDishWithPortions(DishDTO dish, DishPortionDTO portion, double[] coefficients);
+        Task PostDishAsync(DishDTO dish);
 
-        //Task PostDishWithPortions(DishDTO dish, List<DishPortionDTO> portions);
+        Task PutDishAsync(int id, DishDTO dish);
 
-        Task PutDish(int id, DishDTO dish);
-
-        Task DeleteDish(int id);
+        Task DeleteDishAsync(int id);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 using DataAccessLayer.Repositories;
@@ -52,6 +53,12 @@ namespace DataAccessLayer
                                 .CountAsync();
         }
 
+        public virtual async Task<int> GetCountAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await Context.Set<TEntity>()
+                                .CountAsync(predicate);
+        }
+
         public virtual async Task<List<TEntity>> PagingFetchAsync(int startIndex, int count)
         {
             return await Context.Set<TEntity>()
@@ -59,6 +66,44 @@ namespace DataAccessLayer
                                 .ToListAsync();
         }
 
+        public virtual async Task<List<TEntity>> GetWhereAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await Context.Set<TEntity>()
+                                .Where(predicate)
+                                .ToListAsync();
+        }
+
+        public virtual async Task<TEntity?> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await Context.Set<TEntity>()
+                                .FirstOrDefaultAsync(predicate);
+        }
+
+        public virtual async Task<bool> AnyExistingAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await Context.Set<TEntity>()
+                                .AnyAsync(predicate);
+        }
+
         public Task SaveAsync() => Context.SaveChangesAsync();
+
+        private bool disposed = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing)
+                    Context.Dispose();
+
+                disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
     }
 }

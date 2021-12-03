@@ -2,23 +2,22 @@
 using BusinessLogicLayer.Interfaces;
 using DataAccessLayer.Models;
 using DataAccessLayer;
+using System.Linq.Expressions;
 
 namespace BusinessLogicLayer.Services
 {
     public class DishService : IDishService
     {
-        private readonly UnitOfWork _unitOfWork;
-        //private readonly IPortionDistributor _portionDistributor;
+        private readonly IUnitOfWork _unitOfWork;
 
         private bool _disposed = false;
 
-        public DishService()  //(IPortionDistributor portionDistributor) 
+        public DishService(IUoWFactory uowFactory)
         {
-            _unitOfWork = new UnitOfWork();
-            //_portionDistributor = portionDistributor;
+            _unitOfWork = uowFactory.CreateUoW();
         }
 
-        public async Task<DishDTO> GetDish(int id)
+        public async Task<DishDTO> GetDishAsync(int id)
         {
             var dish = await _unitOfWork.Dishes.GetByIdAsync(id);
 
@@ -32,7 +31,7 @@ namespace BusinessLogicLayer.Services
             };
         }
 
-        public async Task<List<DishDTO>> GetDishes()
+        public async Task<List<DishDTO>> GetDishesAsync()
         {
             var dishes = await _unitOfWork.Dishes.GetAllAsync();
 
@@ -49,9 +48,9 @@ namespace BusinessLogicLayer.Services
             return result;
         }
 
-        public async Task<List<DishDTO>> GetDishesByCategory(int categoryId)
+        public async Task<List<DishDTO>> GetDishesByCategoryIdAsync(int categoryId)
         {
-            var dishes = await _unitOfWork.Dishes.GetAllByCategoryAsync(categoryId);
+            var dishes = await _unitOfWork.Dishes.GetWhereAsync(d => d.CategoryId == categoryId);
 
             var result = new List<DishDTO>();
             foreach (var dish in dishes)
@@ -66,9 +65,9 @@ namespace BusinessLogicLayer.Services
             return result;
         }
 
-        public async Task<List<DishDTO>> GetDishesByCuisine(int cuisineId)
+        public async Task<List<DishDTO>> GetDishesByCuisineIdAsync(int cuisineId)
         {
-            var dishes = await _unitOfWork.Dishes.GetAllByCuisineAsync(cuisineId);
+            var dishes = await _unitOfWork.Dishes.GetWhereAsync(d => d.CuisineId == cuisineId);
 
             var result = new List<DishDTO>();
             foreach (var dish in dishes)
@@ -83,7 +82,12 @@ namespace BusinessLogicLayer.Services
             return result;
         }
 
-        public async Task PostDish(DishDTO dish)
+        public async Task<bool> AnyDishesAsync(Expression<Func<Dish, bool>> expression)
+        {
+            return await _unitOfWork.Dishes.AnyExistingAsync(expression);
+        }
+
+        public async Task PostDishAsync(DishDTO dish)
         {
             await _unitOfWork.Dishes.AddAsync(new Dish
             {
@@ -96,64 +100,7 @@ namespace BusinessLogicLayer.Services
             await _unitOfWork.SaveAsync();
         }
 
-        //// Breaking SRP...
-        //public async Task PostDishWithPortions(DishDTO dish, DishPortionDTO portion, double[] coefficients)
-        //{
-        //    await _unitOfWork.Dishes.AddAsync(new Dish
-        //    {
-        //        Id = dish.Id,
-        //        Name = dish.Name,
-        //        Description = dish.Description,
-        //        CuisineId = dish.CuisineId,
-        //        CategoryId = dish.CategoryId,
-        //    });
-        //    var portions = _portionDistributor.DistributePortions(portion, coefficients);
-
-        //    foreach (var p in portions)
-        //        await _unitOfWork.DishPortions.AddAsync(new DishPortion
-        //        {
-        //            Id = p.Id,
-        //            Cost = p.Cost,
-        //            Weight = p.Weight,
-        //            Calories = p.Calories,
-        //            Proteins = p.Proteins,
-        //            Fats = p.Fats,
-        //            Carbs = p.Carbs,
-        //            DishId = dish.Id
-        //        });
-
-        //    await _unitOfWork.SaveAsync();
-        //}
-
-        //// Breaking SRP...
-        //public async Task PostDishWithPortions(DishDTO dish, List<DishPortionDTO> portions)
-        //{
-        //    await _unitOfWork.Dishes.AddAsync(new Dish
-        //    {
-        //        Id = dish.Id,
-        //        Name = dish.Name,
-        //        Description = dish.Description,
-        //        CuisineId = dish.CuisineId,
-        //        CategoryId = dish.CategoryId
-        //    });
-
-        //    foreach (var p in portions)
-        //        await _unitOfWork.DishPortions.AddAsync(new DishPortion
-        //        {
-        //            Id = p.Id,
-        //            Cost = p.Cost,
-        //            Weight = p.Weight,
-        //            Calories = p.Calories,
-        //            Proteins = p.Proteins,
-        //            Fats = p.Fats,
-        //            Carbs = p.Carbs,
-        //            DishId = dish.Id
-        //        });
-
-        //    await _unitOfWork.SaveAsync();
-        //}
-
-        public async Task PutDish(int id, DishDTO dish)
+        public async Task PutDishAsync(int id, DishDTO dish)
         {
             await _unitOfWork.Dishes.UpdateAsync(new Dish
             {
@@ -166,10 +113,10 @@ namespace BusinessLogicLayer.Services
             await _unitOfWork.SaveAsync();
         }
 
-        public async Task DeleteDish(int id)
+        public async Task DeleteDishAsync(int id)
         {
             var dish = await _unitOfWork.Dishes.GetByIdAsync(id);
-            if (dish == null) throw new Exception();
+            if (dish == null) throw new KeyNotFoundException();
 
             await _unitOfWork.Dishes.DeleteAsync(dish);
             await _unitOfWork.SaveAsync();
