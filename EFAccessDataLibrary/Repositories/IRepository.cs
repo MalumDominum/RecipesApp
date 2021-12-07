@@ -3,13 +3,15 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer
 {
-    internal interface IRepository<TKey, TEntity> : IDisposable where TEntity : class
+    public interface IRepository<TKey, TEntity> : IDisposable where TEntity : class
     {
         Task<TEntity> AddAsync(TEntity entity);
 
         Task UpdateAsync(TEntity entity);
 
         Task<TEntity> DeleteAsync(TEntity entity);
+
+        Task<List<TEntity>> GetAllAsync();
 
         Task<TEntity?> GetByIdAsync(TKey id);
 

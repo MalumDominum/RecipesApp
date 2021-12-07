@@ -3,19 +3,17 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-using DataAccessLayer.Repositories;
-
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccessLayer
 {
-    public abstract class EFRepository<TKey, TEntity, TContext> : IRepository<TKey, TEntity>
+    public class EFRepository<TKey, TEntity, TContext> : IRepository<TKey, TEntity>
         where TContext : DbContext
         where TEntity : class
     {
-        protected EFRepository(TContext context) { Context = context; }
+        public EFRepository(TContext context) { Context = context; }
 
-        protected TContext Context { get; }
+        public TContext Context { get; }
 
         public virtual async Task<TEntity> AddAsync(TEntity entity)
         {

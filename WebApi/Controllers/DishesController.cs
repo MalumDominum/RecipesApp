@@ -20,7 +20,7 @@ namespace WebApi.Controllers
         public DishesController(IDishService service) { _service = service; }
 
         // GET: api/Dishes
-        [HttpGet]
+        [HttpGet()]
         public async Task<ActionResult<List<DishDTO>>> GetDishes() => await _service.GetDishesAsync();
 
         // GET: api/Dishes/5

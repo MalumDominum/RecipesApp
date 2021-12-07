@@ -1,24 +1,24 @@
-﻿using DataAccessLayer.Repositories;
+﻿using DataAccessLayer.Models;
 
 namespace DataAccessLayer
 {
     public interface IUnitOfWork : IDisposable
     {
-        CategoryRepository Categories { get; }
+        IRepository<int, Category> Categories { get; }
 
-        CuisineRepository Cuisines { get; }
+        IRepository<int, Cuisine> Cuisines { get; }
 
-        DishPortionRepository DishPortions { get; }
+        IRepository<int, DishPortion> DishPortions { get; }
 
-        DishRepository Dishes { get; }
+        IRepository<int, Dish> Dishes { get; }
 
-        IngredientDishRepository IngredientDish { get; }
+        IRepository<int, IngredientDish> IngredientDish { get; }
 
-        IngredientRepository Ingredients { get; }
+        IRepository<int, Ingredient> Ingredients { get; }
 
-        OrderDishRepository OrderDish { get; }
+        IRepository<int, OrderDish> OrderDish { get; }
 
-        OrderRepository Orders { get; }
+        IRepository<int, Order> Orders { get; }
 
         Task SaveAsync();
     }

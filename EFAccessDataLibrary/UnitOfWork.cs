@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using DataAccessLayer.Models;
-using DataAccessLayer.Repositories;
 
 namespace DataAccessLayer
 {
@@ -9,91 +8,91 @@ namespace DataAccessLayer
         private readonly RestaurantContext db;
         public UnitOfWork() => db = new();
 
-        private CategoryRepository categoryRepository;
-        private CuisineRepository cuisineRepository;
-        private DishPortionRepository dishPortionRepository;
-        private DishRepository dishRepository;
-        private IngredientDishRepository ingredientDishRepository;
-        private IngredientRepository ingredientRepository;
-        private OrderDishRepository orderDishRepository;
-        private OrderRepository orderRepository;
+        private IRepository<int, Category> categoryRepository;
+        private IRepository<int, Cuisine> cuisineRepository;
+        private IRepository<int, DishPortion> dishPortionRepository;
+        private IRepository<int, Dish> dishRepository;
+        private IRepository<int, IngredientDish> ingredientDishRepository;
+        private IRepository<int, Ingredient> ingredientRepository;
+        private IRepository<int, OrderDish> orderDishRepository;
+        private IRepository<int, Order> orderRepository;
 
-        public CategoryRepository Categories
+        public IRepository<int, Category> Categories
         {
             get
             {
                 if (categoryRepository == null)
-                    categoryRepository = new CategoryRepository(db);
+                    categoryRepository = new EFRepository<int, Category, RestaurantContext>(db);
                 return categoryRepository;
             }
         }
 
-        public CuisineRepository Cuisines
+        public IRepository<int, Cuisine> Cuisines
         {
             get
             {
                 if (cuisineRepository == null)
-                    cuisineRepository = new CuisineRepository(db);
+                    cuisineRepository = new EFRepository<int, Cuisine, RestaurantContext>(db);
                 return cuisineRepository;
             }
         }
 
-        public DishPortionRepository DishPortions
+        public IRepository<int, DishPortion> DishPortions
         {
             get
             {
                 if (dishPortionRepository == null)
-                    dishPortionRepository = new DishPortionRepository(db);
+                    dishPortionRepository = new EFRepository<int, DishPortion, RestaurantContext>(db);
                 return dishPortionRepository;
             }
         }
 
-        public DishRepository Dishes
+        public IRepository<int, Dish> Dishes
         {
             get
             {
                 if (dishRepository == null)
-                    dishRepository = new DishRepository(db);
+                    dishRepository = new EFRepository<int, Dish, RestaurantContext>(db);
                 return dishRepository;
             }
         }
 
-        public IngredientDishRepository IngredientDish
+        public IRepository<int, IngredientDish> IngredientDish
         {
             get
             {
                 if (ingredientDishRepository == null)
-                    ingredientDishRepository = new IngredientDishRepository(db);
+                    ingredientDishRepository = new EFRepository<int, IngredientDish, RestaurantContext>(db);
                 return ingredientDishRepository;
             }
         }
 
-        public IngredientRepository Ingredients
+        public IRepository<int, Ingredient> Ingredients
         {
             get
             {
                 if (ingredientRepository == null)
-                    ingredientRepository = new IngredientRepository(db);
+                    ingredientRepository = new EFRepository<int, Ingredient, RestaurantContext>(db);
                 return ingredientRepository;
             }
         }
 
-        public OrderDishRepository OrderDish
+        public IRepository<int, OrderDish> OrderDish
         {
             get
             {
                 if (orderDishRepository == null)
-                    orderDishRepository = new OrderDishRepository(db);
+                    orderDishRepository = new EFRepository<int, OrderDish, RestaurantContext>(db);
                 return orderDishRepository;
             }
         }
 
-        public OrderRepository Orders
+        public IRepository<int, Order> Orders
         {
             get
             {
                 if (orderRepository == null)
-                    orderRepository = new OrderRepository(db);
+                    orderRepository = new EFRepository<int, Order, RestaurantContext>(db);
                 return orderRepository;
             }
         }
