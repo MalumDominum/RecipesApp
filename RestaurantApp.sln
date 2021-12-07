@@ -5,11 +5,11 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi", "WebApi\WebApi.csproj", "{DCB8BDB9-CDDF-4EB3-91D8-B2F8C6BECE0D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLayer", "EFAccessDataLibrary\DataAccessLayer.csproj", "{D352155F-3EF8-4443-B579-7C100287F3B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLayer", "DataAccessLibrary\DataAccessLayer.csproj", "{D352155F-3EF8-4443-B579-7C100287F3B4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLogicLayer", "BusinessLogicLayer\BusinessLogicLayer.csproj", "{349FBD3B-88C1-46B7-AAFA-B2719D421922}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLogicLayer.Tests", "BusinessLogicLayer.Tests\BusinessLogicLayer.Tests.csproj", "{AFD098E2-D7D2-49B6-9179-F50BD4D2FB78}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLogicLayer.Tests", "BusinessLogicLayer.Tests\BusinessLogicLayer.Tests.csproj", "{AFD098E2-D7D2-49B6-9179-F50BD4D2FB78}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
