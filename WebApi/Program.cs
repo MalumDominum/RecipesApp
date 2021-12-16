@@ -14,15 +14,15 @@ var mapperConfig = new MapperConfiguration(cfg =>
 IMapper mapper = mapperConfig.CreateMapper();
 // Add services to the container.
 builder.Services.AddSingleton<IMapper>(mapper);
-builder.Services.AddSingleton<IUoWFactory, UoWFactory>();
-builder.Services.AddSingleton<IDishService, DishService>();
-builder.Services.AddSingleton<IUserService, UserService>();
+builder.Services.AddScoped<IUoWFactory, UoWFactory>();
+builder.Services.AddScoped<IRecipeService, RecipeService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
                     options.LoginPath = new PathString("/Account/Login");
-                });
+                }); // Not needed - delete
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

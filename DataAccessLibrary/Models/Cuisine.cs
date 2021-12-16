@@ -6,9 +6,7 @@ public class Cuisine
 
     public string Name { get; set; }
 
-    public string? Description { get; set; }
+    public List<Recipe> Recipes { get; set; }
 
-    public List<Dish> Dishes { get; set; }
-
-    public Cuisine() => Dishes = new();
+    public Cuisine() => Recipes = new();
 }

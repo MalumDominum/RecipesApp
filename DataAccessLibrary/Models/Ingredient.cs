@@ -6,9 +6,14 @@ public class Ingredient
 
     public string Name { get; set; }
 
+    public byte[]? Image { get; set; }
+
     public string? Description { get; set; }
 
-    public List<IngredientDish> IngredientDishPairs { get; set; }
+    public int GroupId { get; set; }
+    public IngredientGroup Group { get; set; }
 
-    public Ingredient() => IngredientDishPairs = new();
+    public List<IngredientRecipe> IngredientRecipePairs { get; set; }
+
+    public Ingredient() => IngredientRecipePairs = new();
 }

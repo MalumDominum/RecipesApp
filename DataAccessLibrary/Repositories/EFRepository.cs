@@ -77,12 +77,12 @@ namespace DataAccessLayer
                                 .FirstOrDefaultAsync(predicate);
         }
 
-        //public virtual async Task<bool> AnyExistingAsync(Expression<Func<TEntity, bool>> predicate)
-        //{
-        //    return await Context.Set<TEntity>()
-        //                        .AsNoTracking()
-        //                        .AnyAsync(predicate);
-        //}
+        public virtual async Task<bool> AnyExistingAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await Context.Set<TEntity>()
+                                .AsNoTracking()
+                                .AnyAsync(predicate);
+        }
 
         //public virtual IQueryable<TEntity> GetQueryble()
         //{

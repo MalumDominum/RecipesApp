@@ -1,10 +1,11 @@
 ﻿namespace DataAccessLayer.Models;
 
-public class Bookmark
+public class Grade
 {
+    public int Id { get; set; }
+
+    public short Value { get; set; }
+
     public int UserId { get; set; }
     public User User { get; set; }
-
-    public int RecipeId { get; set; }
-    public Recipe Recipe { get; set; }
 }

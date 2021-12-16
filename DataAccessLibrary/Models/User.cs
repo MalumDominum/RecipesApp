@@ -17,4 +17,14 @@ public class User
     public DateTime RegistrationTime { get; set; }
 
     public List<Bookmark> Bookmarks { get; set; }
+
+    public List<Grade> GivenGrades { get; set; }
+
+    public List<Recipe> AuthorshipRecipes { get; set; }
+
+    public User()
+    {
+        Bookmarks = new();
+        AuthorshipRecipes = new();
+    }
 }

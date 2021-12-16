@@ -1,6 +1,6 @@
 ﻿namespace BusinessLogicLayer.DTOs;
 
-public class CuisineDTO
+public class IngredientGroupDTO
 {
     public int Id { get; set; }
 

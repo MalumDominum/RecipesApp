@@ -25,7 +25,7 @@ namespace DataAccessLayer
 
         Task<TEntity?> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
 
-        //Task<bool> AnyExistingAsync(Expression<Func<TEntity, bool>> predicate);
+        Task<bool> AnyExistingAsync(Expression<Func<TEntity, bool>> predicate);
 
         //IQueryable<TEntity> GetQueryble();
 

@@ -49,7 +49,7 @@ namespace BusinessLogicLayer.Services
 
             var token = GenerateJsonWebToken(user);
 
-            return new AuthenticateResponse(user, token); ;
+            return new AuthenticateResponse(user, token);
         }
 
         public async Task<AuthenticateResponse?> RegisterAsync(UserDTO userModel)

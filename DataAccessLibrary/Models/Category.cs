@@ -6,7 +6,7 @@ public class Category
 
     public string Name { get; set; }
 
-    public List<Dish> Dishes { get; set; }
+    public List<Recipe> Recipes { get; set; }
 
-    public Category() => Dishes = new();
+    public Category() => Recipes = new();
 }

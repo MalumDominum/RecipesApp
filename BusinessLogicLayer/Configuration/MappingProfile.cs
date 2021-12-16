@@ -6,16 +6,24 @@ namespace BusinessLogicLayer.Configuration
 {
     public class MappingProfile : Profile
     {
+        private void CreateTwoSidedMap<FirstEntity, SecondEntity>()
+        {
+            CreateMap<FirstEntity, SecondEntity>();
+            CreateMap<SecondEntity, FirstEntity>();
+        }
+
         public MappingProfile()
         {
-            CreateMap<User, UserDTO>();
-            CreateMap<UserDTO, User>();
-
-            CreateMap<User, UserInfoDTO>();
-            CreateMap<UserInfoDTO, User>();
-
-            CreateMap<Dish, DishDTO>();
-            CreateMap<DishDTO, Dish>();
+            CreateTwoSidedMap<User, UserDTO>();
+            CreateTwoSidedMap<User, UserInfoDTO>();
+            CreateTwoSidedMap<Recipe, RecipeDTO>();
+            CreateTwoSidedMap<IngredientRecipe, IngredientRecipeDTO>();
+            CreateTwoSidedMap<IngredientGroup, IngredientGroupDTO>();
+            CreateTwoSidedMap<Ingredient, IngredientDTO>();
+            CreateTwoSidedMap<Grade, GradeDTO>();
+            CreateTwoSidedMap<Cuisine, CuisineDTO>();
+            CreateTwoSidedMap<Category, CategoryDTO>();
+            CreateTwoSidedMap<Bookmark, BookmarkDTO>();
         }
     }
 }
