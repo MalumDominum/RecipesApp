@@ -20,6 +20,8 @@ public class Dish
 
     public List<OrderDish> OrderDishPairs { get; set; }
 
+    public List<Bookmark> Bookmarks { get; set; }
+
     public Dish()
     {
         DishPortions = new();

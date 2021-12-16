@@ -6,11 +6,11 @@ namespace BusinessLogicLayer.Interfaces;
 
 public interface IUserService
 {
-    Task<User> GetUserByIdAsync(int id);
+    Task<UserInfoDTO> GetUserInfoByIdAsync(int id);
 
-    Task<List<User>> GetUsersAsync();
+    Task<List<UserInfoDTO>> GetUsersInfoAsync();
 
-    Task<AuthenticateResponse> AuthenticateAsync(AuthenticateRequest model);
+    Task<AuthenticateResponse?> AuthenticateAsync(AuthenticateRequest model);
 
-    Task<AuthenticateResponse> RegisterAsync(UserDTO userModel);
+    Task<AuthenticateResponse?> RegisterAsync(UserDTO userModel);
 }

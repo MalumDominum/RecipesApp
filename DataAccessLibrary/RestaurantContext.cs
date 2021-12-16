@@ -7,14 +7,14 @@ namespace DataAccessLayer;
 
 public class RestaurantContext : DbContext
 {
-    public RestaurantContext() : base() { }
-
-    public RestaurantContext(DbContextOptions options) : base(options)
+    public RestaurantContext() : base() 
     {
         // For re-create DB (Just run execute, turn off app and comment again)
         //Database.EnsureDeleted();
         //Database.EnsureCreated();
     }
+
+    public RestaurantContext(DbContextOptions options) : base(options) { }
 
     public virtual DbSet<Ingredient> Ingredients { get; set; }
 
@@ -34,12 +34,68 @@ public class RestaurantContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer("Server = DELLG3MALEKSEEV; Database = RestaurantDB; Trusted_Connection = True;");
+        optionsBuilder.UseSqlServer("Server = DELLG3MALEKSEEV;" +
+                "Database = RestaurantDB; Trusted_Connection = True;");
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Bookmark>(entity =>
+        {
+            entity.ToTable("bookmarks");
+
+            entity.HasOne(b => b.User)
+                  .WithMany(u => u.Bookmarks)
+                  .HasForeignKey(b => b.UserId);
+
+            entity.HasOne(b => b.Recipe)
+                  .WithMany(r => r.Bookmarks)
+                  .HasForeignKey(b => b.RecipeId);
+
+            entity.HasKey(b => new { b.UserId, b.RecipeId });
+        });
+
         OnModelCreatingPartial(modelBuilder);
+
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.ToTable("users");
+
+            entity.Property(e => e.Id)
+                  .HasColumnName("user_id");
+
+            entity.Property(e => e.Email)
+                  .HasColumnName("email")
+                  .HasMaxLength(254)
+                  .IsUnicode(true)
+                  .IsRequired();
+            entity.HasIndex(e => e.Email)
+                  .IsUnique();
+
+            entity.Property(e => e.PasswordHash)
+                  .HasColumnName("password_hash");
+
+            entity.Property(e => e.PasswordSalt)
+                  .HasColumnName("password_salt");
+
+            entity.Property(e => e.FirstName)
+                  .HasColumnName("first_name")
+                  .HasMaxLength(50)
+                  .IsUnicode(true)
+                  .IsRequired();
+
+            entity.Property(e => e.LastName)
+                  .HasColumnName("last_name")
+                  .HasMaxLength(50)
+                  .IsUnicode(true)
+                  .IsRequired();
+
+            entity.Property(e => e.RegistrationTime)
+                  .HasColumnName("registration_time");
+
+            entity.HasMany(u => u.Bookmarks)
+                  .WithOne(ur => ur.User);
+        });
 
         modelBuilder.Entity<Ingredient>(entity =>
         {

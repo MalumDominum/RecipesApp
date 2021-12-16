@@ -14,7 +14,7 @@ namespace BusinessLogicLayer.Interfaces
 
         Task<List<DishDTO>> GetDishesByCategoryIdAsync(int categoryId);
 
-        Task<bool> AnyDishesAsync(Expression<Func<Dish, bool>> expression);
+        //Task<bool> AnyDishesAsync(Expression<Func<Dish, bool>> expression);
 
         Task PostDishAsync(DishDTO dish);
 

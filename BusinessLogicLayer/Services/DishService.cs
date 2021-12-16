@@ -46,10 +46,10 @@ namespace BusinessLogicLayer.Services
             return _mapper.Map<List<DishDTO>>(dishes);
         }
 
-        public async Task<bool> AnyDishesAsync(Expression<Func<Dish, bool>> expression)
-        {
-            return await _unitOfWork.Dishes.AnyExistingAsync(expression);
-        }
+        //public async Task<bool> AnyDishesAsync(Expression<Func<Dish, bool>> expression)
+        //{
+        //    return await _unitOfWork.Dishes.AnyExistingAsync(expression);
+        //}
 
         public async Task PostDishAsync(DishDTO dish)
         {

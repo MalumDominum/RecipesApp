@@ -1,59 +1,114 @@
-﻿using DataAccessLayer.Models;
+﻿using AutoMapper;
+using System.Security.Cryptography;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Configuration;
+using DataAccessLayer.Models;
 using DataAccessLayer;
 using BusinessLogicLayer.DTOs;
 using BusinessLogicLayer.Interfaces;
 
 namespace BusinessLogicLayer.Services
 {
-    //public class UserService : IUserService
-    //{
-    //    private readonly IUnitOfWork _unitOfWork;
+    public class UserService : IUserService
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+        private readonly IConfiguration _configuration;
 
-    //    public UserService(IUoWFactory uowFactory)
-    //    {
-    //        _unitOfWork = uowFactory.CreateUoW();
-    //    }
+        public UserService(IUoWFactory uowFactory, IMapper mapper, IConfiguration configuration)
+        {
+            _unitOfWork = uowFactory.CreateUoW();
+            _mapper = mapper;
+            _configuration = configuration;
+        }
 
-    //    public async Task<List<UserDTO>> GetUsersAsync()
-    //    {
-    //        return await _unitOfWork.Users.GetAllAsync();
-    //    }
+        public async Task<List<UserInfoDTO>> GetUsersInfoAsync()
+        {
+            var usersInfo = await _unitOfWork.Users.GetAllAsync();
 
-    //    public async Task<UserDTO> GetUserByIdAsync(int id)
-    //    {
-    //        return _unitOfWork.GetById(id);
-    //    }
+            return _mapper.Map<List<UserInfoDTO>>(usersInfo);
+        }
 
-    //    public async Task<AuthenticateResponse> AuthenticateAsync(AuthenticateRequest request)
-    //    {
-    //        var user = _unitOfWork
-    //            .GetAll()
-    //            .FirstOrDefault(x => x.Username == request.Username && x.Password == request.Password);
+        public async Task<UserInfoDTO> GetUserInfoByIdAsync(int id)
+        {
+            var userInfo = await _unitOfWork.Users.GetByIdAsync(id);
 
-    //        if (user == null)
-    //        {
-    //            // todo: need to add logger
-    //            return null;
-    //        }
+            return _mapper.Map<UserInfoDTO>(userInfo);
+        }
 
-    //        var token = _configuration.GenerateJwtToken(user);
+        public async Task<AuthenticateResponse?> AuthenticateAsync(AuthenticateRequest request)
+        {
+            var user = await _unitOfWork.Users.GetFirstOrDefaultAsync(x => x.Email == request.Email);
 
-    //        return new AuthenticateResponse(user, token);
-    //    }
+            if (user == null) return null;
+            
+            if (!VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
+                return null;
 
-    //    public async Task<Task<AuthenticateResponse>> RegisterAsync(UserDTO userModel)
-    //    {
-    //        var user = _mapper.Map<User>(userModel);
+            var token = GenerateJsonWebToken(user);
 
-    //        var addedUser = await _unitOfWork.Add(user);
+            return new AuthenticateResponse(user, token); ;
+        }
 
-    //        var response = Authenticate(new AuthenticateRequest
-    //        {
-    //            Username = user.Username,
-    //            Password = user.Password
-    //        });
+        public async Task<AuthenticateResponse?> RegisterAsync(UserDTO userModel)
+        {
+            CreatePasswordHash(userModel.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
-    //        return response;
-    //    }
-    //}
+            var user = new User
+            {
+                Id = userModel.Id,
+                Email = userModel.Email,
+                FirstName = userModel.FirstName,
+                LastName = userModel.LastName,
+                RegistrationTime = DateTime.Now,
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt
+            };
+
+            await _unitOfWork.Users.AddAsync(user);
+            await _unitOfWork.SaveAsync();
+
+            return await AuthenticateAsync(new AuthenticateRequest
+                         {
+                             Email = userModel.Email,
+                             Password = userModel.Password
+                         });
+        }
+
+        private string GenerateJsonWebToken(User user)
+        {
+            var claims = new List<Claim>() { new Claim(ClaimTypes.Name, user.Email) };
+
+            var key = new SymmetricSecurityKey(
+                System.Text.Encoding.UTF8.GetBytes(
+                    _configuration.GetSection("Secret").Value));
+
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var token = new JwtSecurityToken(
+                            claims: claims,
+                            signingCredentials: credentials,
+                            expires: DateTime.Now.AddDays(1));
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        {
+            using var hmac = new HMACSHA512();
+
+            passwordSalt = hmac.Key;
+            passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+        }
+
+        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+        {
+            using var hmac = new HMACSHA512(passwordSalt);
+
+            var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+            return computedHash.SequenceEqual(passwordHash);
+        }
+    }
 }

@@ -11,6 +11,9 @@ namespace BusinessLogicLayer.Configuration
             CreateMap<User, UserDTO>();
             CreateMap<UserDTO, User>();
 
+            CreateMap<User, UserInfoDTO>();
+            CreateMap<UserInfoDTO, User>();
+
             CreateMap<Dish, DishDTO>();
             CreateMap<DishDTO, Dish>();
         }

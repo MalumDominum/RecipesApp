@@ -54,8 +54,8 @@ namespace WebApi.Controllers
         [HttpPut("{id:int}")]
         public async Task<IActionResult> PutDishAsync(int id, DishDTO dish)
         {
-            if (await _service.AnyDishesAsync(c => c.Name == dish.Name && c.Id != id))
-                return BadRequest("Another dish with that name already existing");
+            //if (await _service.AnyDishesAsync(c => c.Name == dish.Name && c.Id != id))
+                //return BadRequest("Another dish with that name already existing");
 
             if (id != dish.Id)
                 return BadRequest("Dish must have same in header and body");
@@ -82,8 +82,8 @@ namespace WebApi.Controllers
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteDish(int id)
         {
-            if (!await _service.AnyDishesAsync(d => d.Id == id))
-                return NotFound();
+            //if (!await _service.AnyDishesAsync(d => d.Id == id))
+                //return NotFound();
 
             await _service.DeleteDishAsync(id);
 

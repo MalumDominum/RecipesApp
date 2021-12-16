@@ -1,6 +1,6 @@
 ﻿namespace DataAccessLayer.Models;
 
-public class UserRecipe
+public class Bookmark
 {
     public int UserId { get; set; }
     public User User { get; set; }

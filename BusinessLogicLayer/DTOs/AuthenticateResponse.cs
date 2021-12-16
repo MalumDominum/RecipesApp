@@ -13,9 +13,9 @@ namespace BusinessLogicLayer.DTOs
         public AuthenticateResponse(User user, string token)
         {
             Id = user.Id;
+            Email = user.Email;
             FirstName = user.FirstName;
             LastName = user.LastName;
-            Email = user.Email;
             Token = token;
         }
     }
