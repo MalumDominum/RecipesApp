@@ -20,6 +20,8 @@ namespace DataAccessLayer
 
         IRepository<int, Order> Orders { get; }
 
+        IRepository<int, User> Users { get; }
+
         Task SaveAsync();
     }
 }

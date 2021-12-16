@@ -1,4 +1,5 @@
-﻿using BusinessLogicLayer.DTOs;
+﻿using AutoMapper;
+using BusinessLogicLayer.DTOs;
 using BusinessLogicLayer.Interfaces;
 using DataAccessLayer.Models;
 using DataAccessLayer;
@@ -9,77 +10,40 @@ namespace BusinessLogicLayer.Services
     public class DishService : IDishService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        private bool _disposed = false;
-
-        public DishService(IUoWFactory uowFactory)
+        public DishService(IUoWFactory uowFactory, IMapper mapper)
         {
             _unitOfWork = uowFactory.CreateUoW();
+            _mapper = mapper;
         }
 
         public async Task<DishDTO> GetDishAsync(int id)
         {
             var dish = await _unitOfWork.Dishes.GetByIdAsync(id);
 
-            return new DishDTO
-            {
-                Id = dish.Id,
-                Name = dish.Name,
-                Description = dish.Description,
-                CategoryId = dish.CategoryId,
-                CuisineId = dish.CuisineId
-            };
+            return _mapper.Map<DishDTO>(dish);
         }
 
         public async Task<List<DishDTO>> GetDishesAsync()
         {
             var dishes = await _unitOfWork.Dishes.GetAllAsync();
 
-            var result = new List<DishDTO>();
-            foreach (var dish in dishes)
-                result.Add(new DishDTO
-                {
-                    Id = dish.Id,
-                    Name = dish.Name,
-                    Description = dish.Description,
-                    CategoryId = dish.CategoryId,
-                    CuisineId = dish.CuisineId
-                });
-            return result;
+            return _mapper.Map<List<DishDTO>>(dishes);
         }
 
         public async Task<List<DishDTO>> GetDishesByCategoryIdAsync(int categoryId)
         {
             var dishes = await _unitOfWork.Dishes.GetWhereAsync(d => d.CategoryId == categoryId);
 
-            var result = new List<DishDTO>();
-            foreach (var dish in dishes)
-                result.Add(new DishDTO
-                {
-                    Id = dish.Id,
-                    Name = dish.Name,
-                    Description = dish.Description,
-                    CategoryId = dish.CategoryId,
-                    CuisineId = dish.CuisineId
-                });
-            return result;
+            return _mapper.Map<List<DishDTO>>(dishes);
         }
 
         public async Task<List<DishDTO>> GetDishesByCuisineIdAsync(int cuisineId)
         {
             var dishes = await _unitOfWork.Dishes.GetWhereAsync(d => d.CuisineId == cuisineId);
 
-            var result = new List<DishDTO>();
-            foreach (var dish in dishes)
-                result.Add(new DishDTO
-                {
-                    Id = dish.Id,
-                    Name = dish.Name,
-                    Description = dish.Description,
-                    CategoryId = dish.CategoryId,
-                    CuisineId = dish.CuisineId
-                });
-            return result;
+            return _mapper.Map<List<DishDTO>>(dishes);
         }
 
         public async Task<bool> AnyDishesAsync(Expression<Func<Dish, bool>> expression)
@@ -89,27 +53,13 @@ namespace BusinessLogicLayer.Services
 
         public async Task PostDishAsync(DishDTO dish)
         {
-            await _unitOfWork.Dishes.AddAsync(new Dish
-            {
-                Id = dish.Id, 
-                Name = dish.Name,
-                Description = dish.Description,
-                CuisineId = dish.CuisineId,
-                CategoryId = dish.CategoryId,
-            });
+            await _unitOfWork.Dishes.AddAsync(_mapper.Map<Dish>(dish));
             await _unitOfWork.SaveAsync();
         }
 
         public async Task PutDishAsync(int id, DishDTO dish)
         {
-            await _unitOfWork.Dishes.UpdateAsync(new Dish
-            {
-                Id = dish.Id,
-                Name = dish.Name,
-                Description = dish.Description,
-                CuisineId = dish.CuisineId,
-                CategoryId = dish.CategoryId
-            });
+            await _unitOfWork.Dishes.UpdateAsync(_mapper.Map<Dish>(dish));
             await _unitOfWork.SaveAsync();
         }
 
@@ -121,6 +71,8 @@ namespace BusinessLogicLayer.Services
             await _unitOfWork.Dishes.DeleteAsync(dish);
             await _unitOfWork.SaveAsync();
         }
+
+        private bool _disposed = false;
 
         public virtual void Dispose(bool disposing)
         {

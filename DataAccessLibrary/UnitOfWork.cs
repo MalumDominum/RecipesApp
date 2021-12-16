@@ -16,6 +16,7 @@ namespace DataAccessLayer
         private IRepository<int, Ingredient> ingredientRepository;
         private IRepository<int, OrderDish> orderDishRepository;
         private IRepository<int, Order> orderRepository;
+        private IRepository<int, User> userRepository;
 
         public IRepository<int, Category> Categories
         {
@@ -94,6 +95,16 @@ namespace DataAccessLayer
                 if (orderRepository == null)
                     orderRepository = new EFRepository<int, Order, RestaurantContext>(db);
                 return orderRepository;
+            }
+        }
+
+        public IRepository<int, User> Users
+        {
+            get
+            {
+                if (userRepository == null)
+                    userRepository = new EFRepository<int, User, RestaurantContext>(db);
+                return userRepository;
             }
         }
 

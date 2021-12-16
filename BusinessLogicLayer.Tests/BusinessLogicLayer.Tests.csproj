@@ -21,7 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BusinessLogicLayer\BusinessLogicLayer.csproj" />
-    <ProjectReference Include="..\EFAccessDataLibrary\DataAccessLayer.csproj" />
+    <ProjectReference Include="..\DataAccessLibrary\DataAccessLayer.csproj" />
   </ItemGroup>
 
 </Project>
