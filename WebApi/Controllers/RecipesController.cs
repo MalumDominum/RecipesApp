@@ -22,12 +22,12 @@ namespace WebApi.Controllers
         public RecipesController(IRecipeService service) { _service = service; }
 
         // GET: api/Recipes
-        [HttpGet()]
-        public async Task<ActionResult<List<RecipeDTO>>> GetDishes() => await _service.GetRecipesAsync();
+        [HttpGet]
+        public async Task<ActionResult<List<RecipeDTO>>> GetRecipes() => await _service.GetRecipesAsync();
 
         // GET: api/Recipes/5
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<RecipeDTO>> GetDish(int id)
+        public async Task<ActionResult<RecipeDTO>> GetRecipe(int id)
         {
             var recipe = await _service.GetRecipeAsync(id);
 
@@ -59,7 +59,7 @@ namespace WebApi.Controllers
 
             await _service.PostRecipeAsync(recipe);
 
-            return CreatedAtAction(nameof(GetDish), new { id = recipe.Id }, recipe);
+            return CreatedAtAction(nameof(GetRecipe), new { id = recipe.Id }, recipe);
         }
 
         // PUT: api/Recipes/5
@@ -78,7 +78,7 @@ namespace WebApi.Controllers
 
         // DELETE: api/Recipes/5
         [HttpDelete("{id:int}")]
-        public async Task<IActionResult> DeleteDish(int id)
+        public async Task<IActionResult> DeleteRecipe(int id)
         {
             if (!await _service.AnyRecipesAsync(d => d.Id == id))
                 return NotFound();

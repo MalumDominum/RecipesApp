@@ -17,12 +17,13 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class AccountsController : ControllerBase
     {
         private readonly IUserService _service;
 
-        public AccountController(IUserService service) { _service = service; }
+        public AccountsController(IUserService service) { _service = service; }
 
+        // POST: api/Accounts/authenticate
         [HttpPost("authenticate")]
         public async Task<ActionResult<AuthenticateResponse>> Authenticate(AuthenticateRequest model)
         {
@@ -34,6 +35,7 @@ namespace WebApi.Controllers
             return Ok(response);
         }
 
+        // POST: api/Accounts/register
         [HttpPost("register")]
         public async Task<ActionResult<AuthenticateResponse>> Register(UserDTO user)
         {
@@ -45,7 +47,8 @@ namespace WebApi.Controllers
             return Ok(response);
         }
 
-        [HttpGet()]
+        // GET: api/Accounts
+        [HttpGet]
         public async Task<ActionResult<List<UserInfoDTO>>> GetUsersInfo()
         {
             return Ok(await _service.GetUsersInfoAsync());

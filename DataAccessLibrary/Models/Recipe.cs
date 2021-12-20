@@ -29,11 +29,14 @@ public class Recipe
 
     public List<Bookmark> Bookmarks { get; set; }
 
+    public List<Grade> Grades { get; set; }
+
     public List<IngredientRecipe> IngredientRecipePairs { get; set; }
 
     public Recipe() 
     { 
         Bookmarks = new();
+        Grades = new();
         IngredientRecipePairs = new();
     }
 }

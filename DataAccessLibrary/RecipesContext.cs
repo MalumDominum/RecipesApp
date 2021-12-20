@@ -1,13 +1,11 @@
 ﻿using DataAccessLayer.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.SqlServer;
-using Microsoft.Extensions.Configuration;
 
 namespace DataAccessLayer;
 
 public class RecipesContext : DbContext
 {
-    public RecipesContext() : base() 
+    public RecipesContext()
     {
         // For re-create DB (Just run execute on any request, turn off app and comment again)
         //Database.EnsureDeleted();
@@ -52,7 +50,7 @@ public class RecipesContext : DbContext
             entity.Property(e => e.Email)
                   .HasColumnName("email")
                   .HasMaxLength(254)
-                  .IsUnicode(true)
+                  .IsUnicode()
                   .IsRequired();
             entity.HasIndex(e => e.Email)
                   .IsUnique();
@@ -66,20 +64,20 @@ public class RecipesContext : DbContext
             entity.Property(e => e.FirstName)
                   .HasColumnName("first_name")
                   .HasMaxLength(50)
-                  .IsUnicode(true)
+                  .IsUnicode()
                   .IsRequired();
 
             entity.Property(e => e.LastName)
                   .HasColumnName("last_name")
                   .HasMaxLength(50)
-                  .IsUnicode(true)
+                  .IsUnicode()
                   .IsRequired();
 
             entity.Property(e => e.RegistrationTime)
                   .HasColumnName("registration_time");
 
             entity.HasMany(u => u.Bookmarks)
-                  .WithOne(ur => ur.User);
+                  .WithOne(b => b.User);
 
             entity.HasMany(u => u.GivenGrades)
                   .WithOne(u => u.User);
@@ -109,12 +107,17 @@ public class RecipesContext : DbContext
         {
             entity.ToTable("grades");
 
-            entity.Property(e => e.Value)
-                  .HasColumnName("value");
+            entity.HasOne(b => b.User)
+                .WithMany(u => u.GivenGrades)
+                .HasForeignKey(b => b.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
 
-            entity.HasOne(g => g.User)
-                  .WithMany(u => u.GivenGrades)
-                  .HasForeignKey(g => g.UserId);
+            entity.HasOne(b => b.Recipe)
+                .WithMany(r => r.Grades)
+                .HasForeignKey(b => b.RecipeId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            entity.HasKey(b => new { b.UserId, b.RecipeId });
         });
 
         modelBuilder.Entity<Ingredient>(entity =>
@@ -127,7 +130,7 @@ public class RecipesContext : DbContext
             entity.Property(e => e.Name)
                   .HasColumnName("name")
                   .HasMaxLength(50)
-                  .IsUnicode(true)
+                  .IsUnicode()
                   .IsRequired();
             entity.HasIndex(e => e.Name)
                   .IsUnique();
@@ -138,7 +141,7 @@ public class RecipesContext : DbContext
 
             entity.Property(e => e.Description)
                   .HasColumnName("description")
-                  .IsUnicode(true);
+                  .IsUnicode();
 
             entity.HasOne(i => i.Group)
                   .WithMany(g => g.Ingredients)
@@ -173,7 +176,7 @@ public class RecipesContext : DbContext
             entity.Property(e => e.Name)
                   .HasColumnName("name")
                   .HasMaxLength(65)
-                  .IsUnicode(true)
+                  .IsUnicode()
                   .IsRequired();
 
             entity.Property(e => e.Image)
@@ -199,11 +202,11 @@ public class RecipesContext : DbContext
             entity.Property(e => e.Description)
                   .HasColumnName("description")
                   .HasMaxLength(1000)
-                  .IsUnicode(true);
+                  .IsUnicode();
 
             entity.Property(e => e.Steps)
                   .HasColumnName("steps")
-                  .IsUnicode(true);
+                  .IsUnicode();
 
             entity.HasOne(r => r.Category)
                   .WithMany(c => c.Recipes)
@@ -234,7 +237,7 @@ public class RecipesContext : DbContext
             entity.Property(e => e.Name)
                   .HasColumnName("name")
                   .HasMaxLength(50)
-                  .IsUnicode(true)
+                  .IsUnicode()
                   .IsRequired();
             entity.HasIndex(e => e.Name)
                   .IsUnique();
@@ -253,7 +256,7 @@ public class RecipesContext : DbContext
             entity.Property(e => e.Name)
                   .HasColumnName("name")
                   .HasMaxLength(50)
-                  .IsUnicode(true)
+                  .IsUnicode()
                   .IsRequired();
             entity.HasIndex(e => e.Name)
                   .IsUnique();
@@ -272,7 +275,7 @@ public class RecipesContext : DbContext
             entity.Property(e => e.Name)
                   .HasColumnName("name")
                   .HasMaxLength(50)
-                  .IsUnicode(true)
+                  .IsUnicode()
                   .IsRequired();
             entity.HasIndex(e => e.Name)
                   .IsUnique();

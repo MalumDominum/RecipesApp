@@ -1,50 +1,51 @@
 ﻿using System.Threading.Tasks;
+using DataAccessLayer.Interfaces;
 using DataAccessLayer.Models;
 
 namespace DataAccessLayer
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly RecipesContext db;
-        public UnitOfWork() => db = new();
+        private readonly RecipesContext _db;
+        public UnitOfWork() => _db = new();
 
-        private IRepository<int, User> userRepository;
-        private IRepository<int, Bookmark> bookmarkRepository;
-        private IRepository<int, Grade> gradeRepository;
-        private IRepository<int, Ingredient> ingredientRepository;
-        private IRepository<int, IngredientGroup> ingredientGroupRepository;
-        private IRepository<int, IngredientRecipe> ingredientRecipeRepository;
-        private IRepository<int, Recipe> recipeRepository;
-        private IRepository<int, Category> categoryRepository;
-        private IRepository<int, Cuisine> cuisineRepository;
+        private IRepository<int, User> _userRepository;
+        private IRepository<(int, int), Bookmark> _bookmarkRepository;
+        private IRepository<(int, int), Grade> _gradeRepository;
+        private IRepository<int, Ingredient> _ingredientRepository;
+        private IRepository<int, IngredientGroup> _ingredientGroupRepository;
+        private IRepository<(int, int), IngredientRecipe> _ingredientRecipeRepository;
+        private IRepository<int, Recipe> _recipeRepository;
+        private IRepository<int, Category> _categoryRepository;
+        private IRepository<int, Cuisine> _cuisineRepository;
 
         public IRepository<int, User> Users
         {
             get
             {
-                if (userRepository == null)
-                    userRepository = new EFRepository<int, User, RecipesContext>(db);
-                return userRepository;
+                if (_userRepository == null)
+                    _userRepository = new EFRepository<int, User, RecipesContext>(_db);
+                return _userRepository;
             }
         }
 
-        public IRepository<int, Bookmark> Bookmarks
+        public IRepository<(int, int), Bookmark> Bookmarks
         {
             get
             {
-                if (bookmarkRepository == null)
-                    bookmarkRepository = new EFRepository<int, Bookmark, RecipesContext>(db);
-                return bookmarkRepository;
+                if (_bookmarkRepository == null)
+                    _bookmarkRepository = new EFRepository<(int, int), Bookmark, RecipesContext>(_db);
+                return _bookmarkRepository;
             }
         }
 
-        public IRepository<int, Grade> Grades
+        public IRepository<(int, int), Grade> Grades
         {
             get
             {
-                if (gradeRepository == null)
-                    gradeRepository = new EFRepository<int, Grade, RecipesContext>(db);
-                return gradeRepository;
+                if (_gradeRepository == null)
+                    _gradeRepository = new EFRepository<(int, int), Grade, RecipesContext>(_db);
+                return _gradeRepository;
             }
         }
 
@@ -52,9 +53,9 @@ namespace DataAccessLayer
         {
             get
             {
-                if (ingredientRepository == null)
-                    ingredientRepository = new EFRepository<int, Ingredient, RecipesContext>(db);
-                return ingredientRepository;
+                if (_ingredientRepository == null)
+                    _ingredientRepository = new EFRepository<int, Ingredient, RecipesContext>(_db);
+                return _ingredientRepository;
             }
         }
 
@@ -62,19 +63,19 @@ namespace DataAccessLayer
         {
             get
             {
-                if (ingredientGroupRepository == null)
-                    ingredientGroupRepository = new EFRepository<int, IngredientGroup, RecipesContext>(db);
-                return ingredientGroupRepository;
+                if (_ingredientGroupRepository == null)
+                    _ingredientGroupRepository = new EFRepository<int, IngredientGroup, RecipesContext>(_db);
+                return _ingredientGroupRepository;
             }
         }
 
-        public IRepository<int, IngredientRecipe> IngredientRecipe
+        public IRepository<(int, int), IngredientRecipe> IngredientRecipe
         {
             get
             {
-                if (ingredientRecipeRepository == null)
-                    ingredientRecipeRepository = new EFRepository<int, IngredientRecipe, RecipesContext>(db);
-                return ingredientRecipeRepository;
+                if (_ingredientRecipeRepository == null)
+                    _ingredientRecipeRepository = new EFRepository<(int, int), IngredientRecipe, RecipesContext>(_db);
+                return _ingredientRecipeRepository;
             }
         }
 
@@ -82,9 +83,9 @@ namespace DataAccessLayer
         {
             get
             {
-                if (recipeRepository == null)
-                    recipeRepository = new EFRepository<int, Recipe, RecipesContext>(db);
-                return recipeRepository;
+                if (_recipeRepository == null)
+                    _recipeRepository = new EFRepository<int, Recipe, RecipesContext>(_db);
+                return _recipeRepository;
             }
         }
 
@@ -92,9 +93,9 @@ namespace DataAccessLayer
         {
             get
             {
-                if (categoryRepository == null)
-                    categoryRepository = new EFRepository<int, Category, RecipesContext>(db);
-                return categoryRepository;
+                if (_categoryRepository == null)
+                    _categoryRepository = new EFRepository<int, Category, RecipesContext>(_db);
+                return _categoryRepository;
             }
         }
 
@@ -102,25 +103,22 @@ namespace DataAccessLayer
         {
             get
             {
-                if (cuisineRepository == null)
-                    cuisineRepository = new EFRepository<int, Cuisine, RecipesContext>(db);
-                return cuisineRepository;
+                if (_cuisineRepository == null)
+                    _cuisineRepository = new EFRepository<int, Cuisine, RecipesContext>(_db);
+                return _cuisineRepository;
             }
         }
 
-        public async Task SaveAsync() => await db.SaveChangesAsync();
+        public async Task SaveAsync() => await _db.SaveChangesAsync();
 
-        private bool _disposed = false;
+        private bool _disposed;
 
         public virtual void Dispose(bool disposing)
         {
-            if (!_disposed)
-            {
-                if (disposing)
-                    db.Dispose();
+            if (_disposed) return;
 
-                _disposed = true;
-            }
+            if (disposing) _db.Dispose();
+            _disposed = true;
         }
 
         public void Dispose()

@@ -6,10 +6,10 @@ namespace BusinessLogicLayer.Configuration
 {
     public class MappingProfile : Profile
     {
-        private void CreateTwoSidedMap<FirstEntity, SecondEntity>()
+        private void CreateTwoSidedMap<TFirstEntity, TSecondEntity>()
         {
-            CreateMap<FirstEntity, SecondEntity>();
-            CreateMap<SecondEntity, FirstEntity>();
+            CreateMap<TFirstEntity, TSecondEntity>();
+            CreateMap<TSecondEntity, TFirstEntity>();
         }
 
         public MappingProfile()

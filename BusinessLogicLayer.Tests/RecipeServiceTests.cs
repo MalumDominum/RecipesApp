@@ -6,19 +6,19 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-using DataAccessLayer;
 using DataAccessLayer.Models;
 
 using BusinessLogicLayer.Configuration;
 using BusinessLogicLayer.Services;
 using BusinessLogicLayer.Interfaces;
 using BusinessLogicLayer.DTOs;
+using DataAccessLayer.Interfaces;
 
 namespace BusinessLogicLayer.Tests
 {
     public class RecipeServiceTests
     {
-        private IMapper _mapper;
+        private IMapper? _mapper;
 
         [SetUp]
         public void Setup() 
@@ -31,7 +31,7 @@ namespace BusinessLogicLayer.Tests
         }
 
         [Test]
-        public async void GetRecipeAsync_GetRecipeWithIdEquals3_RecipeRecieved()
+        public async Task GetRecipeAsync_GetRecipeWithIdEquals3_RecipeReceived()
         {
             var factory = Substitute.For<IUoWFactory>();
             var uow = Substitute.For<IUnitOfWork>();
@@ -40,7 +40,7 @@ namespace BusinessLogicLayer.Tests
             uow.Recipes.Returns(repo);
             factory.CreateUoW().Returns(uow);
             var service = new RecipeService(factory, _mapper);
-            var recipeId = 3;
+            const int recipeId = 3;
 
             var result = await service.GetRecipeAsync(recipeId);
 
@@ -51,12 +51,12 @@ namespace BusinessLogicLayer.Tests
             });
         }
 
-        private Recipe GetRecipe(int id)
+        private static Recipe GetRecipe(int id)
         {
             return new Recipe { Id = id, Name = "Vegetable stir-fry", CuisineId = 3, CategoryId = 1 };
         }
 
-        private List<RecipeDTO> GetRecipes()
+        private static List<RecipeDTO> GetRecipes()
         {
             return new List<RecipeDTO>
             {

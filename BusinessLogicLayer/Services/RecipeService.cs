@@ -2,8 +2,8 @@
 using BusinessLogicLayer.DTOs;
 using BusinessLogicLayer.Interfaces;
 using DataAccessLayer.Models;
-using DataAccessLayer;
 using System.Linq.Expressions;
+using DataAccessLayer.Interfaces;
 
 namespace BusinessLogicLayer.Services
 {
@@ -72,17 +72,14 @@ namespace BusinessLogicLayer.Services
             await _unitOfWork.SaveAsync();
         }
 
-        private bool _disposed = false;
+        private bool _disposed;
 
         public virtual void Dispose(bool disposing)
         {
-            if (!_disposed)
-            {
-                if (disposing)
-                    _unitOfWork.Dispose();
+            if (_disposed) return;
 
-                _disposed = true;
-            }
+            if (disposing) _unitOfWork.Dispose();
+            _disposed = true;
         }
 
         public void Dispose()

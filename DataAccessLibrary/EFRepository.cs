@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-
+using DataAccessLayer.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccessLayer
@@ -27,10 +27,10 @@ namespace DataAccessLayer
             await Task.FromResult(0);
         }
 
-        public virtual async Task<TEntity> DeleteAsync(TEntity entity)
+        public virtual Task<TEntity> DeleteAsync(TEntity entity)
         {
-            return Context.Set<TEntity>()
-                          .Remove(entity).Entity;
+            return Task.FromResult(Context.Set<TEntity>()
+                                          .Remove(entity).Entity);
         }
 
         public virtual async Task<List<TEntity>> GetAllAsync()
@@ -89,19 +89,16 @@ namespace DataAccessLayer
         //    return Context.FromExpression(() => Context.Set<TEntity>().AsQueryable());
         //}
 
-        public Task SaveAsync() => Context.SaveChangesAsync();
+        public async Task SaveAsync() => await Context.SaveChangesAsync();
 
-        private bool disposed = false;
+        private bool _disposed;
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposed)
-            {
-                if (disposing)
-                    Context.Dispose();
+            if (_disposed) return;
 
-                disposed = true;
-            }
+            if (disposing) Context.Dispose();
+            _disposed = true;
         }
 
         public void Dispose()

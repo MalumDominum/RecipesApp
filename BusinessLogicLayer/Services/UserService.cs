@@ -5,9 +5,9 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
 using DataAccessLayer.Models;
-using DataAccessLayer;
 using BusinessLogicLayer.DTOs;
 using BusinessLogicLayer.Interfaces;
+using DataAccessLayer.Interfaces;
 
 namespace BusinessLogicLayer.Services
 {
@@ -54,7 +54,7 @@ namespace BusinessLogicLayer.Services
 
         public async Task<AuthenticateResponse?> RegisterAsync(UserDTO userModel)
         {
-            CreatePasswordHash(userModel.Password, out byte[] passwordHash, out byte[] passwordSalt);
+            CreatePasswordHash(userModel.Password, out var passwordHash, out var passwordSalt);
 
             var user = new User
             {
@@ -79,7 +79,7 @@ namespace BusinessLogicLayer.Services
 
         private string GenerateJsonWebToken(User user)
         {
-            var claims = new List<Claim>() { new Claim(ClaimTypes.Name, user.Email) };
+            var claims = new List<Claim> { new(ClaimTypes.Name, user.Email) };
 
             var key = new SymmetricSecurityKey(
                 System.Text.Encoding.UTF8.GetBytes(
@@ -95,7 +95,7 @@ namespace BusinessLogicLayer.Services
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             using var hmac = new HMACSHA512();
 
@@ -103,7 +103,7 @@ namespace BusinessLogicLayer.Services
             passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
         }
 
-        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+        private static bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
             using var hmac = new HMACSHA512(passwordSalt);
 
