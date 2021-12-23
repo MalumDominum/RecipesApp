@@ -29,7 +29,7 @@ namespace WebApi.Controllers
         }
 
         // GET: api/IngredientRecipe/Ingredients/5
-        [HttpGet("Users/{ingredientId:int}")]
+        [HttpGet("Ingredients/{ingredientId:int}")]
         public async Task<ActionResult<List<IngredientRecipeDTO>>> GetIngredientRecipesByIngredientId(int ingredientId)
         {
             return await _service.GetIngredientRecipeByIngredientIdAsync(ingredientId);
