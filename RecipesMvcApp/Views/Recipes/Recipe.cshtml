@@ -1,0 +1,32 @@
+﻿@{
+    ViewData["Title"] = "";
+}
+
+<div class="title-container">
+    <div class="img waves-background"></div>
+    <h1 id="main-title" data-text="{class}">
+        {class}
+    </h1>
+</div>
+
+<div class="ingredient-container">
+    <div class="img"></div><!-- style={backgroundImage}-->
+    <h1>{props.heading}</h1>
+    <div class="card-links">
+        <a>{props.category}</a><!-- href={"/recipes?categories=" + props.categoryId}-->
+				<span>•</span>
+				<a>{props.cuisine} кухня</a><!-- href={"/recipes?cuisines=" + props.cuisineId}-->
+			</div>
+			<div class="author">Автор: {props.author}</div>
+    <div class="coocking-time">{props.time} минут</div>
+    <span class="bookmark-count">{props.bookmarkCount}</span>
+    <button></button><!-- class={"bookmark-button img" + (isBookmarked ? " saved" : "")} onClick={bookmarkOnClickHandle}-->
+    <div class="rating-container">
+        <div class="stars"><!-- style={{ "--rating": props.rating }}-->
+        </div>
+        {props.rating}
+    </div>
+    <p class="description">{props.description}</p>
+    <div class="ingredients-count">{props.ingredientCount} Ингредиентов</div>
+    <p class="description">{props.steps}</p>
+</div>

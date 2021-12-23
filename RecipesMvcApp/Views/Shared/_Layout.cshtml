@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Plate</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/WebApplication1.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header id="header" class="header-container">
+        <a href="/" class="logo-container">
+            <div class="img logo"></div>
+            <div class="logo-text">
+                Plat<span>e</span>
+            </div>
+        </a>
+        <nav class="header-nav container">
+            @Html.ActionLink("Рецепты", "Index", "Recipes")
+            <a href="/">Ингредиенты</a>
+            <a href="/">Добавить рецепт</a>
+            <a href="/" class="sign-in-button">
+                Войти
+            </a>
+        </nav>
+    </header>
+    @RenderBody()
+    
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

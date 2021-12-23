@@ -1,0 +1,32 @@
+﻿@model List<BusinessLogicLayer.DTOs.RecipeDTO>
+@{
+    ViewData["Title"] = "Каталог рецептов";
+}
+
+<div class="title-container">
+    <div class="img waves-background"></div>
+    <h1 id="main-title" data-text="Рецепты">
+        Рецепты
+    </h1>
+</div>
+
+<div class="page-content">
+    <div class="cards-container">
+        @foreach (var recipe in Model) {
+            <div class="card-container img" style="">
+                <div class="coocking-time">@recipe.CookingTime минут</div>
+                <div class="author">Автор: @recipe.AuthorId</div>
+                <div class="card-links">
+                    <a>@recipe.CategoryId</a>
+                    <span>•</span>
+                    <a>@recipe.CuisineId кухня</a>
+                </div>
+                <a href="recipes/@recipe.Id"class="card-heading">
+                    @recipe.Name
+                </a>
+                <span class="bookmark-count">{bookmarkCount}</span>
+                <button class="bookmark-button img"></button><!-- class={"bookmark-button img" + (isBookmarked ? " saved" : "")} onClick={bookmarkOnClickHandle}-->
+		    </div>
+        }
+    </div>
+</div>
