@@ -46,6 +46,13 @@ namespace BusinessLogicLayer.Services
             return _mapper.Map<List<RecipeDTO>>(recipes);
         }
 
+        public async Task<List<RecipeDTO>> GetRecipesByNameAsync(string name)
+        {
+            var recipes = await _unitOfWork.Recipes.GetWhereAsync(d => d.Name.Contains(name));
+
+            return _mapper.Map<List<RecipeDTO>>(recipes);
+        }
+
         public async Task<bool> AnyRecipesAsync(Expression<Func<Recipe, bool>> expression)
         {
             return await _unitOfWork.Recipes.AnyExistingAsync(expression);

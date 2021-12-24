@@ -14,6 +14,8 @@ namespace BusinessLogicLayer.Interfaces
 
         Task<List<RecipeDTO>> GetRecipesByCategoryIdAsync(int categoryId);
 
+        Task<List<RecipeDTO>> GetRecipesByNameAsync(string name);
+
         Task<bool> AnyRecipesAsync(Expression<Func<Recipe, bool>> expression);
 
         Task PostRecipeAsync(RecipeDTO dish);

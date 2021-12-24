@@ -50,6 +50,13 @@ namespace WebApi.Controllers
             return await _service.GetRecipesByCuisineIdAsync(cuisineId);
         }
 
+        // GET: api/Recipes/Манная каша
+        [HttpGet("{name}")]
+        public async Task<ActionResult<List<RecipeDTO>>> GetRecipesByName(string name)
+        {
+            return await _service.GetRecipesByNameAsync(name);
+        }
+
         // POST: api/Recipes
         [HttpPost]
         public async Task<ActionResult<RecipeDTO>> PostRecipe(RecipeDTO recipe)
@@ -59,7 +66,9 @@ namespace WebApi.Controllers
 
             await _service.PostRecipeAsync(recipe);
 
-            return CreatedAtAction(nameof(GetRecipe), new { id = recipe.Id }, recipe);
+            var recipeAdded = (await _service.GetRecipesByNameAsync(recipe.Name)).First();
+
+            return CreatedAtAction(nameof(GetRecipe), new { id = recipeAdded.Id }, recipeAdded);
         }
 
         // PUT: api/Recipes/5

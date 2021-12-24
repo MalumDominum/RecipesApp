@@ -42,5 +42,12 @@ namespace WebApi.Controllers
         {
             return await _service.GetIngredientsByGroupIdAsync(groupId);
         }
+
+        // GET: api/Ingredients/Ананас
+        [HttpGet("{name}")]
+        public async Task<ActionResult<List<IngredientDTO>>> GetIngredientsByName(string name)
+        {
+            return await _service.GetIngredientsByNameAsync(name);
+        }
     }
 }
