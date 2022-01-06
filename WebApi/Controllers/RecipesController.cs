@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 using BusinessLogicLayer.Interfaces;
-using BusinessLogicLayer.Services;
 using BusinessLogicLayer.DTOs;
 
 namespace WebApi.Controllers
@@ -21,9 +14,12 @@ namespace WebApi.Controllers
 
         public RecipesController(IRecipeService service) { _service = service; }
 
-        // GET: api/Recipes
+        // GET: api/Recipes?name=Манная каша&categoryId=3&categoryId=7&authorId=1
         [HttpGet]
-        public async Task<ActionResult<List<RecipeDTO>>> GetRecipes() => await _service.GetRecipesAsync();
+        public async Task<ActionResult<List<RecipeDTO>>> GetRecipes(
+            [FromQuery] string? name, [FromQuery] int[]? cuisineId,
+            [FromQuery] int[]? categoryId, [FromQuery] int[]? authorId) => 
+            await _service.GetRecipesByParameters(name, cuisineId, categoryId, authorId);
 
         // GET: api/Recipes/5
         [HttpGet("{id:int}")]
@@ -34,6 +30,13 @@ namespace WebApi.Controllers
             if (recipe == null) return NotFound();
 
             return recipe;
+        }
+
+        // GET: api/Recipes/Манная каша
+        [HttpGet("{name}")]
+        public async Task<ActionResult<List<RecipeDTO>>> GetRecipesByName(string name)
+        {
+            return await _service.GetRecipesByNameAsync(name);
         }
 
         // GET: api/Recipes/Categories/3
@@ -50,11 +53,11 @@ namespace WebApi.Controllers
             return await _service.GetRecipesByCuisineIdAsync(cuisineId);
         }
 
-        // GET: api/Recipes/Манная каша
-        [HttpGet("{name}")]
-        public async Task<ActionResult<List<RecipeDTO>>> GetRecipesByName(string name)
+        // GET: api/Recipes/Authors/3
+        [HttpGet("Authors/{authorId:int}")]
+        public async Task<ActionResult<List<RecipeDTO>>> GetRecipesByAuthorId(int authorId)
         {
-            return await _service.GetRecipesByNameAsync(name);
+            return await _service.GetRecipesByAuthorIdAsync(authorId);
         }
 
         // POST: api/Recipes

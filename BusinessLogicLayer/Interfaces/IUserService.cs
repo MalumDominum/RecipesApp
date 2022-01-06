@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using DataAccessLayer.Models;
-using BusinessLogicLayer.DTOs;
+﻿using BusinessLogicLayer.DTOs;
 
 namespace BusinessLogicLayer.Interfaces;
 

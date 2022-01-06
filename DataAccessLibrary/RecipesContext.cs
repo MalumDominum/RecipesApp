@@ -12,26 +12,6 @@ public class RecipesContext : DbContext
         //Database.EnsureCreated();
     }
 
-    //public RestaurantContext(DbContextOptions options) : base(options) { }
-
-    public virtual DbSet<User> Users { get; set; }
-
-    public virtual DbSet<Bookmark> Bookmarks { get; set; }
-
-    public virtual DbSet<Grade> Grades { get; set; }
-
-    public virtual DbSet<Ingredient> Ingredients { get; set; }
-
-    public virtual DbSet<IngredientGroup> IngredientGroups { get; set; }
-
-    public virtual DbSet<IngredientRecipe> IngredientRecipe { get; set; }
-
-    public virtual DbSet<Recipe> Recipes { get; set; }
-
-    public virtual DbSet<Category> Categories { get; set; }
-
-    public virtual DbSet<Cuisine> Cuisines { get; set; }
-
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlServer("Server = DELLG3MALEKSEEV;" +

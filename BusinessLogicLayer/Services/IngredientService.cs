@@ -41,7 +41,9 @@ namespace BusinessLogicLayer.Services
 
         public async Task<List<IngredientDTO>> GetIngredientsByNameAsync(string name)
         {
-            var ingredients = await _unitOfWork.Ingredients.GetWhereAsync(d => d.Name.Contains(name));
+            var ingredients = await _unitOfWork.Ingredients.GetWhereAsync(d =>
+                    d.Name.ToLower().Contains(name.ToLower())
+                );
 
             return _mapper.Map<List<IngredientDTO>>(ingredients);
         }

@@ -1,29 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 using BusinessLogicLayer.Interfaces;
-using BusinessLogicLayer.Services;
 using BusinessLogicLayer.DTOs;
-using Microsoft.AspNetCore.Authorization;
-using DataAccessLayer.Models;
 
 namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountsController : ControllerBase
+    public class UsersController : ControllerBase
     {
         private readonly IUserService _service;
 
-        public AccountsController(IUserService service) { _service = service; }
+        public UsersController(IUserService service) { _service = service; }
 
-        // POST: api/Accounts/authenticate
+        // POST: api/Users/authenticate
         [HttpPost("authenticate")]
         public async Task<ActionResult<AuthenticateResponse>> Authenticate(AuthenticateRequest model)
         {
@@ -35,7 +26,7 @@ namespace WebApi.Controllers
             return Ok(response);
         }
 
-        // POST: api/Accounts/register
+        // POST: api/Users/register
         [HttpPost("register")]
         public async Task<ActionResult<AuthenticateResponse>> Register(UserDTO user)
         {
@@ -47,11 +38,18 @@ namespace WebApi.Controllers
             return Ok(response);
         }
 
-        // GET: api/Accounts
+        // GET: api/Users
         [HttpGet]
         public async Task<ActionResult<List<UserInfoDTO>>> GetUsersInfo()
         {
             return Ok(await _service.GetUsersInfoAsync());
+        }
+
+        // GET: api/Users/3
+        [HttpGet("{userId:int}")]
+        public async Task<ActionResult<UserInfoDTO>> GetUserInfoById(int userId)
+        {
+            return Ok(await _service.GetUserInfoByIdAsync(userId));
         }
     }
 }

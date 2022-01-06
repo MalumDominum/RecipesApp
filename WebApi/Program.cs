@@ -4,7 +4,6 @@ using BusinessLogicLayer.Interfaces;
 using BusinessLogicLayer.Services;
 using BusinessLogicLayer.Infrastructure;
 using BusinessLogicLayer.Configuration;
-using DataAccessLayer.Models;
 using Microsoft.OpenApi.Models;
 
 var allowedOrigins = new[] { "http://localhost:3000" };
@@ -38,7 +37,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
                 }); // Not needed - delete
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: allowSpecificOrigins,
+    options.AddPolicy(allowSpecificOrigins,
                       corsPolicyBuilder =>
                       {
                           corsPolicyBuilder.WithOrigins(allowedOrigins)

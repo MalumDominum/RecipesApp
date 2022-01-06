@@ -26,7 +26,7 @@ namespace DataAccessLayer.Interfaces
 
         Task<bool> AnyExistingAsync(Expression<Func<TEntity, bool>> predicate);
 
-        //IQueryable<TEntity> GetQueryable();
+        IQueryable<TEntity> GetQueryable();
 
         Task SaveAsync();
     }

@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 using DataAccessLayer.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -84,10 +81,10 @@ namespace DataAccessLayer
                                 .AnyAsync(predicate);
         }
 
-        //public virtual IQueryable<TEntity> GetQueryble()
-        //{
-        //    return Context.FromExpression(() => Context.Set<TEntity>().AsQueryable());
-        //}
+        public virtual IQueryable<TEntity> GetQueryable()
+        {
+            return Context.Set<TEntity>().AsQueryable();
+        }
 
         public async Task SaveAsync() => await Context.SaveChangesAsync();
 

@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 using BusinessLogicLayer.Interfaces;
-using BusinessLogicLayer.Services;
 using BusinessLogicLayer.DTOs;
 
 namespace WebApi.Controllers
@@ -37,6 +31,14 @@ namespace WebApi.Controllers
         public async Task<ActionResult<List<BookmarkDTO>>> GetBookmarksByRecipeId(int recipeId)
         {
             return await _service.GetBookmarksByRecipeIdAsync(recipeId);
+        }
+
+        // GET: api/Bookmarks/Recipes/3/Count
+        [HttpGet("Recipes/{recipeId:int}/Count")]
+        public async Task<string> GetBookmarksCountByRecipeId(int recipeId)
+        {
+            return JsonConvert.SerializeObject(
+                new { count = await _service.GetBookmarksCountByRecipeIdAsync(recipeId)});
         }
 
         // POST: api/Bookmarks

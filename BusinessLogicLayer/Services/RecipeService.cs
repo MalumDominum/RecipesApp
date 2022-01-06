@@ -4,6 +4,7 @@ using BusinessLogicLayer.Interfaces;
 using DataAccessLayer.Models;
 using System.Linq.Expressions;
 using DataAccessLayer.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace BusinessLogicLayer.Services
 {
@@ -32,6 +33,15 @@ namespace BusinessLogicLayer.Services
             return _mapper.Map<List<RecipeDTO>>(recipes);
         }
 
+        public async Task<List<RecipeDTO>> GetRecipesByNameAsync(string name)
+        {
+            var recipes = await _unitOfWork.Recipes.GetWhereAsync(d =>
+                d.Name.ToLower().Contains(name.ToLower())
+            );
+
+            return _mapper.Map<List<RecipeDTO>>(recipes);
+        }
+
         public async Task<List<RecipeDTO>> GetRecipesByCategoryIdAsync(int categoryId)
         {
             var recipes = await _unitOfWork.Recipes.GetWhereAsync(d => d.CategoryId == categoryId);
@@ -46,11 +56,31 @@ namespace BusinessLogicLayer.Services
             return _mapper.Map<List<RecipeDTO>>(recipes);
         }
 
-        public async Task<List<RecipeDTO>> GetRecipesByNameAsync(string name)
+        public async Task<List<RecipeDTO>> GetRecipesByAuthorIdAsync(int authorId)
         {
-            var recipes = await _unitOfWork.Recipes.GetWhereAsync(d => d.Name.Contains(name));
+            var recipes = await _unitOfWork.Recipes.GetWhereAsync(d => d.AuthorId == authorId);
 
             return _mapper.Map<List<RecipeDTO>>(recipes);
+        }
+
+        public async Task<List<RecipeDTO>> GetRecipesByParameters(
+            string? name, int[]? cuisineIds, int[]? categoryIds, int[]? authorIds)
+        {
+            var queryable = _unitOfWork.Recipes.GetQueryable();
+
+            if (name != null)
+                queryable = queryable.Where(d => d.Name.ToLower().Contains(name.ToLower()));
+
+            if (cuisineIds is { Length: > 0 })
+                queryable = queryable.Where(d => cuisineIds.Contains(d.CuisineId));
+
+            if (categoryIds is { Length: > 0 })
+                queryable = queryable.Where(d => categoryIds.Contains(d.CategoryId));
+
+            if (authorIds is { Length: > 0 })
+                queryable = queryable.Where(d => authorIds.Contains(d.AuthorId));
+
+            return _mapper.Map<List<RecipeDTO>>(await queryable.ToListAsync());
         }
 
         public async Task<bool> AnyRecipesAsync(Expression<Func<Recipe, bool>> expression)
@@ -58,10 +88,13 @@ namespace BusinessLogicLayer.Services
             return await _unitOfWork.Recipes.AnyExistingAsync(expression);
         }
 
-        public async Task PostRecipeAsync(RecipeDTO recipe)
+        public async Task<RecipeDTO> PostRecipeAsync(RecipeDTO recipe)
         {
-            await _unitOfWork.Recipes.AddAsync(_mapper.Map<Recipe>(recipe));
+            var recipeAdded = _mapper.Map<RecipeDTO>(
+                    await _unitOfWork.Recipes.AddAsync(_mapper.Map<Recipe>(recipe))
+                );
             await _unitOfWork.SaveAsync();
+            return recipeAdded;
         }
 
         public async Task PutRecipeAsync(int id, RecipeDTO recipe)

@@ -38,6 +38,11 @@ namespace BusinessLogicLayer.Services
             return _mapper.Map<List<BookmarkDTO>>(bookmarks);
         }
 
+        public async Task<int> GetBookmarksCountByRecipeIdAsync(int recipeId)
+        {
+            return await _unitOfWork.Bookmarks.GetCountAsync(ir => ir.RecipeId == recipeId);
+        }
+
         public async Task<bool> AnyBookmarksAsync(Expression<Func<Bookmark, bool>> expression)
         {
             return await _unitOfWork.Bookmarks.AnyExistingAsync(expression);

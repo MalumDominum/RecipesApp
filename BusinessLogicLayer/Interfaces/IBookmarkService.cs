@@ -12,6 +12,8 @@ namespace BusinessLogicLayer.Interfaces
 
         Task<List<BookmarkDTO>> GetBookmarksByRecipeIdAsync(int recipeId);
 
+        Task<int> GetBookmarksCountByRecipeIdAsync(int recipeId);
+
         Task<bool> AnyBookmarksAsync(Expression<Func<Bookmark, bool>> expression);
 
         Task PostBookmarkAsync(BookmarkDTO bookmark);
