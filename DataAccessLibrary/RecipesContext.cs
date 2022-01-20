@@ -194,17 +194,21 @@ public class RecipesContext : DbContext
 
             entity.HasOne(r => r.Cuisine)
                   .WithMany(c => c.Recipes)
-                  .HasForeignKey(r => r.CuisineId);
+                  .HasForeignKey(r => r.CuisineId)
+                  .OnDelete(DeleteBehavior.NoAction);
 
             entity.HasOne(r => r.Author)
                   .WithMany(c => c.AuthorshipRecipes)
-                  .HasForeignKey(r => r.AuthorId);
+                  .HasForeignKey(r => r.AuthorId)
+                  .OnDelete(DeleteBehavior.NoAction);
 
             entity.HasMany(r => r.Bookmarks)
-                  .WithOne(b => b.Recipe);
+                  .WithOne(b => b.Recipe)
+                  .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasMany(r => r.IngredientRecipePairs)
-                  .WithOne(ir => ir.Recipe);
+                  .WithOne(ir => ir.Recipe)
+                  .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<Cuisine>(entity =>

@@ -14,6 +14,8 @@ namespace BusinessLogicLayer.Interfaces
 
         Task<List<IngredientDTO>> GetIngredientsByNameAsync(string name);
 
+        Task<List<IngredientDTO>> GetIngredientGroupsByParametersAsync(string? name, int[]? groupIds);
+
         Task<bool> AnyIngredientsAsync(Expression<Func<Ingredient, bool>> expression);
     }
 }

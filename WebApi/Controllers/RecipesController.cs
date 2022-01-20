@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 using BusinessLogicLayer.Interfaces;
 using BusinessLogicLayer.DTOs;
@@ -17,9 +16,12 @@ namespace WebApi.Controllers
         // GET: api/Recipes?name=Манная каша&categoryId=3&categoryId=7&authorId=1
         [HttpGet]
         public async Task<ActionResult<List<RecipeDTO>>> GetRecipes(
-            [FromQuery] string? name, [FromQuery] int[]? cuisineId,
-            [FromQuery] int[]? categoryId, [FromQuery] int[]? authorId) => 
-            await _service.GetRecipesByParameters(name, cuisineId, categoryId, authorId);
+            [FromQuery] string? name, [FromQuery] int? leftTimeBound, [FromQuery] int? rightTimeBound,
+            [FromQuery] int[]? cuisineId, [FromQuery] int[]? categoryId, [FromQuery] int[]? authorId)
+        {
+            return await _service.GetRecipesByParametersAsync(
+                name, leftTimeBound, rightTimeBound, cuisineId, categoryId, authorId);
+        }
 
         // GET: api/Recipes/5
         [HttpGet("{id:int}")]
@@ -64,12 +66,15 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<RecipeDTO>> PostRecipe(RecipeDTO recipe)
         {
-            if (await _service.AnyRecipesAsync(x => x.Name == recipe.Name))
-                return BadRequest("Recipe with that name already existing");
-
             await _service.PostRecipeAsync(recipe);
 
-            var recipeAdded = (await _service.GetRecipesByNameAsync(recipe.Name)).First();
+            var recipeAdded = (await _service.GetRecipesByParametersAsync(
+                    recipe.Name,
+                    recipe.CookingTime, recipe.CookingTime,
+                    new[] { recipe.CuisineId }, 
+                    new[] { recipe.CategoryId },
+                    new[] { recipe.AuthorId })
+                ).First();
 
             return CreatedAtAction(nameof(GetRecipe), new { id = recipeAdded.Id }, recipeAdded);
         }
@@ -78,9 +83,6 @@ namespace WebApi.Controllers
         [HttpPut("{id:int}")]
         public async Task<IActionResult> PutRecipeAsync(int id, RecipeDTO recipe)
         {
-            if (await _service.AnyRecipesAsync(c => c.Name == recipe.Name && c.Id != id))
-                return BadRequest("Another recipe with that name already existing");
-
             if (id != recipe.Id)
                 return BadRequest("Recipe must have the same id in header and body");
 

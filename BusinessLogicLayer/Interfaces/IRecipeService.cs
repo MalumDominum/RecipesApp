@@ -18,8 +18,9 @@ namespace BusinessLogicLayer.Interfaces
 
         Task<List<RecipeDTO>> GetRecipesByAuthorIdAsync(int authorId);
 
-        Task<List<RecipeDTO>> GetRecipesByParameters(
-            string? name, int[]? cuisineIds, int[]? categoryIds, int[]? authorIds);
+        Task<List<RecipeDTO>> GetRecipesByParametersAsync(
+            string? name, int? leftTimeBound, int? rightTimeBound,
+            int[]? cuisineIds, int[]? categoryIds, int[]? authorIds);
 
         Task<bool> AnyRecipesAsync(Expression<Func<Recipe, bool>> expression);
 

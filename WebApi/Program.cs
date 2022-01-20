@@ -34,7 +34,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
                 .AddCookie(options =>
                 {
                     options.LoginPath = new PathString("/Account/Login");
-                }); // Not needed - delete
+                });
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(allowSpecificOrigins,
@@ -67,7 +67,7 @@ app.UseHttpsRedirection();
 app.UseCors(allowSpecificOrigins);
 
 app.UseAuthentication();
-app.UseAuthorization();
+//app.UseAuthorization();
 
 app.MapControllers();
 

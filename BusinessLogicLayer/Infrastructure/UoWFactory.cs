@@ -1,14 +1,9 @@
 ﻿using DataAccessLayer;
-using BusinessLogicLayer.Interfaces;
 using DataAccessLayer.Interfaces;
 
-namespace BusinessLogicLayer.Infrastructure
+namespace BusinessLogicLayer.Infrastructure;
+
+public class UoWFactory : IUoWFactory
 {
-    public class UoWFactory : IUoWFactory
-    {
-        public IUnitOfWork CreateUoW()
-        {
-            return new UnitOfWork();
-        }
-    }
+    public IUnitOfWork CreateUoW() => new UnitOfWork();
 }

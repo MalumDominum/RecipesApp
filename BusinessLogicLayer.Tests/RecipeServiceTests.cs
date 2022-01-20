@@ -3,15 +3,14 @@ using NSubstitute;
 using AutoMapper;
 
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 
 using DataAccessLayer.Models;
 
 using BusinessLogicLayer.Configuration;
 using BusinessLogicLayer.Services;
-using BusinessLogicLayer.Interfaces;
 using BusinessLogicLayer.DTOs;
+using BusinessLogicLayer.Infrastructure;
 using DataAccessLayer.Interfaces;
 
 namespace BusinessLogicLayer.Tests

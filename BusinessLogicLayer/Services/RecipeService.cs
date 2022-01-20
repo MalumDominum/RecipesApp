@@ -3,6 +3,7 @@ using BusinessLogicLayer.DTOs;
 using BusinessLogicLayer.Interfaces;
 using DataAccessLayer.Models;
 using System.Linq.Expressions;
+using BusinessLogicLayer.Infrastructure;
 using DataAccessLayer.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -63,22 +64,29 @@ namespace BusinessLogicLayer.Services
             return _mapper.Map<List<RecipeDTO>>(recipes);
         }
 
-        public async Task<List<RecipeDTO>> GetRecipesByParameters(
-            string? name, int[]? cuisineIds, int[]? categoryIds, int[]? authorIds)
+        public async Task<List<RecipeDTO>> GetRecipesByParametersAsync(
+            string? name, int? leftTimeBound, int? rightTimeBound,
+            int[]? cuisineIds, int[]? categoryIds, int[]? authorIds)
         {
             var queryable = _unitOfWork.Recipes.GetQueryable();
 
-            if (name != null)
-                queryable = queryable.Where(d => d.Name.ToLower().Contains(name.ToLower()));
+            if (!string.IsNullOrEmpty(name))
+                queryable = queryable.Where(r => r.Name.ToLower().Contains(name.ToLower()));
+
+            if (leftTimeBound != null)
+                queryable = queryable.Where(r => r.CookingTime >= leftTimeBound);
+
+            if (rightTimeBound != null)
+                queryable = queryable.Where(r => r.CookingTime <= rightTimeBound);
 
             if (cuisineIds is { Length: > 0 })
-                queryable = queryable.Where(d => cuisineIds.Contains(d.CuisineId));
+                queryable = queryable.Where(r => cuisineIds.Contains(r.CuisineId));
 
             if (categoryIds is { Length: > 0 })
-                queryable = queryable.Where(d => categoryIds.Contains(d.CategoryId));
+                queryable = queryable.Where(r => categoryIds.Contains(r.CategoryId));
 
             if (authorIds is { Length: > 0 })
-                queryable = queryable.Where(d => authorIds.Contains(d.AuthorId));
+                queryable = queryable.Where(r => authorIds.Contains(r.AuthorId));
 
             return _mapper.Map<List<RecipeDTO>>(await queryable.ToListAsync());
         }

@@ -16,7 +16,11 @@ namespace WebApi.Controllers
 
         // GET: api/Ingredients
         [HttpGet]
-        public async Task<ActionResult<List<IngredientDTO>>> GetIngredients() => await _service.GetIngredientsAsync();
+        public async Task<ActionResult<List<IngredientDTO>>> GetIngredientGroupsByParameters(
+            [FromQuery] string? name, [FromQuery] int[]? groupId)
+        {
+            return await _service.GetIngredientGroupsByParametersAsync(name, groupId);
+        }
 
         // GET: api/Ingredients/5
         [HttpGet("{id:int}")]

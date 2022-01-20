@@ -3,7 +3,9 @@ using BusinessLogicLayer.DTOs;
 using BusinessLogicLayer.Interfaces;
 using DataAccessLayer.Models;
 using System.Linq.Expressions;
+using BusinessLogicLayer.Infrastructure;
 using DataAccessLayer.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace BusinessLogicLayer.Services
 {
@@ -46,6 +48,19 @@ namespace BusinessLogicLayer.Services
                 );
 
             return _mapper.Map<List<IngredientDTO>>(ingredients);
+        }
+
+        public async Task<List<IngredientDTO>> GetIngredientGroupsByParametersAsync(string? name, int[]? groupIds)
+        {
+            var queryable = _unitOfWork.Ingredients.GetQueryable();
+
+            if (!string.IsNullOrEmpty(name))
+                queryable = queryable.Where(i => i.Name.ToLower().Contains(name.ToLower()));
+
+            if (groupIds is { Length: > 0 })
+                queryable = queryable.Where(i => groupIds.Contains(i.GroupId));
+
+            return _mapper.Map<List<IngredientDTO>>(await queryable.ToListAsync());
         }
 
         public async Task<bool> AnyIngredientsAsync(Expression<Func<Ingredient, bool>> expression)
